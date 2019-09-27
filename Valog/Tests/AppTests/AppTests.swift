@@ -1,13 +1,12 @@
-import App
 import XCTest
+@testable import App
 
-final class AppTests: XCTestCase {
-    func testNothing() throws {
-        // Add your tests here
+class AppTests: XCTestCase {
+    func testStub() throws {
         XCTAssert(true)
     }
-
+    
     static let allTests = [
-        ("testNothing", testNothing)
+        ("testStub", testStub),
     ]
 }
