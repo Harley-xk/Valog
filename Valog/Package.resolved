@@ -15,8 +15,8 @@
         "repositoryURL": "https://github.com/vapor/core.git",
         "state": {
           "branch": null,
-          "revision": "57368d4092f92df3131e5968c8ed24a3c7361ec0",
-          "version": "3.8.1"
+          "revision": "18f2436bf7a6bc2224372c0885db2e0159af1649",
+          "version": "3.9.2"
         }
       },
       {
@@ -24,8 +24,8 @@
         "repositoryURL": "https://github.com/vapor/crypto.git",
         "state": {
           "branch": null,
-          "revision": "45bb12d13cdec80dbd1cc0685ea002e51ab83439",
-          "version": "3.3.2"
+          "revision": "df8eb7d8ae51787b3a0628aa3975e67666da936c",
+          "version": "3.3.3"
         }
       },
       {
@@ -42,8 +42,8 @@
         "repositoryURL": "https://github.com/vapor/http.git",
         "state": {
           "branch": null,
-          "revision": "254a0a0cbf22a02b697a075a0d2ddbb448bb7c87",
-          "version": "3.2.0"
+          "revision": "3808ed0401379b6e9f4a053f03090ea9d658caa9",
+          "version": "3.2.1"
         }
       },
       {
@@ -69,8 +69,8 @@
         "repositoryURL": "https://github.com/vapor/routing.git",
         "state": {
           "branch": null,
-          "revision": "626190ddd2bd9f967743b60ba6adaf90bbd2651c",
-          "version": "3.0.2"
+          "revision": "d76f339c9716785e5079af9d7075d28ff7da3d92",
+          "version": "3.1.0"
         }
       },
       {
@@ -123,8 +123,8 @@
         "repositoryURL": "https://github.com/vapor/template-kit.git",
         "state": {
           "branch": null,
-          "revision": "4b1073d74be9f5c6a5bc63a07a84e83efec26229",
-          "version": "1.1.2"
+          "revision": "51405c83e95e8adb09565278a5e9b959c605e56c",
+          "version": "1.4.0"
         }
       },
       {
@@ -150,8 +150,8 @@
         "repositoryURL": "https://github.com/vapor/vapor.git",
         "state": {
           "branch": null,
-          "revision": "c86ada59b31c69f08a6abd4f776537cba48d5df6",
-          "version": "3.3.0"
+          "revision": "92a58a9a84e4330500b99fe355a94d29f67abe58",
+          "version": "3.3.1"
         }
       },
       {

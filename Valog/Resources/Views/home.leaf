@@ -1,0 +1,25 @@
+#set("title") { 
+  群星陨落
+}
+
+#set("body") {
+
+  <div class="tip" style="padding: 1rem">
+    <h1>
+      Welcom to my personal site.
+  </h1>
+
+  <div style="color: #8c8c8c;font-size:0.85rem;">
+      🚧 This site is currently under construction 🚧
+  </dvi>
+  
+  </div>
+
+
+  #for(post in posts) {
+    <div style="font-size: 0.1rem;color: #cccccc;">#(post)</div>
+  }
+
+}
+
+#embed("base")

@@ -3,8 +3,10 @@ import Vapor
 /// Register your application's routes here.
 public func routes(_ router: Router) throws {
     // "It works" page
-    router.get { req in
-        return try req.view().render("welcome")
+    router.get { req -> EventLoopFuture<View> in
+        return try req.view().render("home", [
+            "posts": (0 ..< 100).sorted()
+        ])
     }
     
     // Says hello
