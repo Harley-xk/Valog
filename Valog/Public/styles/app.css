@@ -6,12 +6,14 @@ body {
 	font-family: sans-serif;
 }
 
-.container {
-	background: #f4f4f4;
-	/* height: 100%; */
+div.welcome {
+	height: 100%;
+	text-align: center;
 }
 
-.navbar {
-	margin: 0 -1rem;
-	padding: 1rem 2rem !important
+div.welcome img {
+	position: relative;
+  	top: 50%;
+  	transform: translateY(-50%);
+	width: 300px;
 }

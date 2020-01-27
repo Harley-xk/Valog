@@ -2,21 +2,54 @@ import Leaf
 import Vapor
 
 /// Called before your application initializes.
-public func configure(_ config: inout Config, _ env: inout Environment, _ services: inout Services) throws {
+func configure(_ s: inout Services) throws {
     // Register providers first
-    try services.register(LeafProvider())
+    s.provider(LeafProvider())
 
-    // Register routes to the router
-    let router = EngineRouter.default()
-    try routes(router)
-    services.register(router, as: Router.self)
+    /// Register routes
+    s.extend(Routes.self) { r, c in
+        try routes(r, c)
+    }
+
+    // directory
+    s.register(DirectoryConfiguration.self) { c in
+        // Serves files from `Public/` directory
+        #if Xcode
+        // check if we are in Xcode via SPM integration
+        let path = #file
+        if !path.contains("SourcePackages/checkouts") {
+            var fileBasedWorkDir: String? = nil
+            // we are NOT in Xcode via SPM integration
+            // use #file hacks to determine working directory automatically
+            if #file.contains(".build") {
+                // most dependencies are in `./.build/`
+                fileBasedWorkDir = #file.components(separatedBy: "/.build").first
+            } else if #file.contains("Packages") {
+                // when editing a dependency, it is in `./Packages/`
+                fileBasedWorkDir = #file.components(separatedBy: "/Packages").first
+            } else {
+                // when dealing with current repository, file is in `./Sources/`
+                fileBasedWorkDir = #file.components(separatedBy: "/Sources").first
+            }
+            if let dir = fileBasedWorkDir {
+                return .init(workingDirectory: dir)
+            }
+        }
+        #endif
+        return .detect()
+    }
     
-    // Use Leaf for rendering views
-    config.prefer(LeafRenderer.self, for: ViewRenderer.self)
+    /// Register middleware
+    s.register(MiddlewareConfiguration.self) { c in
+        // Create _empty_ middleware config
+        var middlewares = MiddlewareConfiguration()
 
-    // Register middleware
-    var middlewares = MiddlewareConfig() // Create _empty_ middleware config
-    middlewares.use(FileMiddleware.self) // Serves files from `Public/` directory
-    middlewares.use(ErrorMiddleware.self) // Catches errors and converts to HTTP response
-    services.register(middlewares)
+        // Serves files from `Public/` directory
+        try middlewares.use(c.make(FileMiddleware.self))
+
+        // Catches errors and converts to HTTP response
+        try middlewares.use(c.make(ErrorMiddleware.self))
+
+        return middlewares
+    }
 }
