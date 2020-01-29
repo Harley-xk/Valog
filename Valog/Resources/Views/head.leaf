@@ -1,3 +1,1 @@
-#export("head"):
-     <h1>Hello, #(title)!</h1>
-#endexport
+     <h1>Hello, #("title")!</h1>

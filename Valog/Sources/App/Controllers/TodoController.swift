@@ -2,8 +2,8 @@ import Fluent
 import Vapor
 
 struct TodoController {
-    func index(req: Request) throws -> EventLoopFuture<[Todo]> {
-        return Todo.query(on: req.db).all()
+    func index(req: Request) throws -> EventLoopFuture<Page<User>> {
+        return User.query(on: req.db).paginate(for: req)
     }
 
     func create(req: Request) throws -> EventLoopFuture<Todo> {

@@ -7,7 +7,7 @@ import Leaf
 public func configure(_ app: Application) throws {
     
     // initialize
-    app.beforeConfigure()
+    try app.beforeConfigure()
 
     // Leaf Template Renderer
     app.views.use(.leaf)
@@ -16,7 +16,7 @@ public func configure(_ app: Application) throws {
     app.middleware.use(FileMiddleware(publicDirectory: app.directory.publicDirectory))
     
     // Configure SQLite database
-    app.databases.use(.sqlite(.file(app.directory.resourcesDirectory + "Data.sqlite")), as: .sqlite)
+    app.databases.use(.sqlite(.file(app.directory.dataDirectory + "Data.sqlite")), as: .sqlite)
 
     // Configure migrations
     try prepareMigrations(app)

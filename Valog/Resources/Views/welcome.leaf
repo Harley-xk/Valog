@@ -1,10 +1,20 @@
-#extend("base"):
-    #export("title"):
-        #(title)
-    #endexport
-    #export("body"):
+<!DOCTYPE html>
+<html>
+<head>
+	<title>#("title")</title>
+	<link rel="stylesheet" href="/styles/app.css">
+</head>
+<body>
+
+#extend("head"):
+#endextend
         <div class="welcome">
             <img src="/images/it-works.png">
         </div>
-    #endexport
-#endextend
+
+<script>
+    window.document.title = "Vapor Hello"
+</script>
+
+</body>
+</html>
