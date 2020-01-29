@@ -1,5 +1,7 @@
 #extend("base"):
-    #export("title", "It works!")
+    #export("title"):
+        #(title)
+    #endexport
     #export("body"):
         <div class="welcome">
             <img src="/images/it-works.png">

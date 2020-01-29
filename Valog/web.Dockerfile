@@ -1,30 +1,30 @@
-# You can set the Swift version to what you need for your app. Versions can be found here: https://hub.docker.com/_/swift
-FROM swift:5.0 as builder
+# ================================
+# Build image
+# ================================
+FROM vapor/swift:5.1 as build
+WORKDIR /build
 
-# For local build, add `--build-arg env=docker`
-# In your application, you can use `Environment.custom(name: "docker")` to check if you're in this env
-ARG env
-
-RUN apt-get -qq update && apt-get install -y \
-  libssl-dev zlib1g-dev \
-  && rm -r /var/lib/apt/lists/*
-WORKDIR /app
+# Copy entire repo into container
 COPY . .
-RUN mkdir -p /build/lib && cp -R /usr/lib/swift/linux/*.so* /build/lib
-RUN swift build -c release && mv `swift build -c release --show-bin-path` /build/bin
 
-# Production image
-FROM ubuntu:18.04
-ARG env
-# DEBIAN_FRONTEND=noninteractive for automatic UTC configuration in tzdata
-RUN apt-get -qq update && DEBIAN_FRONTEND=noninteractive apt-get install -y \ 
-  libatomic1 libicu60 libxml2 libcurl4 libz-dev libbsd0 tzdata \
-  && rm -r /var/lib/apt/lists/*
-WORKDIR /app
-COPY --from=builder /build/bin/Run .
-COPY --from=builder /build/lib/* /usr/lib/
-COPY --from=builder /app/Public ./Public
-COPY --from=builder /app/Resources ./Resources
-ENV ENVIRONMENT=$env
+# Install sqlite3
+RUN apt-get update -y \
+	&& apt-get install -y libsqlite3-dev
 
-ENTRYPOINT ./Run serve --env $ENVIRONMENT --hostname 0.0.0.0 --port 80
+# Compile with optimizations
+RUN swift build \
+	--enable-test-discovery \
+	-c release
+
+# ================================
+# Run image
+# ================================
+FROM vapor/ubuntu:18.04
+WORKDIR /run
+
+# Copy build artifacts
+COPY --from=build /build/.build/release /run
+# Copy Swift runtime libraries
+COPY --from=build /usr/lib/swift/ /usr/lib/swift/
+
+ENTRYPOINT ["./Run", "serve", "--env", "production", "--hostname", "0.0.0.0", "--port", "80"]

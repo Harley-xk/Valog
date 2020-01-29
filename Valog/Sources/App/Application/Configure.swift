@@ -1,0 +1,27 @@
+import Fluent
+import FluentSQLiteDriver
+import Vapor
+import Leaf
+
+// Called before your application initializes.
+public func configure(_ app: Application) throws {
+    
+    // initialize
+    app.beforeConfigure()
+
+    // Leaf Template Renderer
+    app.views.use(.leaf)
+    
+    // Serves files from `Public/` directory
+    app.middleware.use(FileMiddleware(publicDirectory: app.directory.publicDirectory))
+    
+    // Configure SQLite database
+    app.databases.use(.sqlite(.file(app.directory.resourcesDirectory + "Data.sqlite")), as: .sqlite)
+
+    // Configure migrations
+    app.migrations.add(CreateTodo())
+    
+    try app.autoMigrate().wait()
+    
+    try routes(app)
+}
