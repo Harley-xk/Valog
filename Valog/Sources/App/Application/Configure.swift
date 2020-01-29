@@ -19,9 +19,8 @@ public func configure(_ app: Application) throws {
     app.databases.use(.sqlite(.file(app.directory.resourcesDirectory + "Data.sqlite")), as: .sqlite)
 
     // Configure migrations
-    app.migrations.add(CreateTodo())
+    try prepareMigrations(app)
     
-    try app.autoMigrate().wait()
-    
+    // Configure routes
     try routes(app)
 }

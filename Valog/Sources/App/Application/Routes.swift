@@ -5,19 +5,9 @@ func routes(_ app: Application) throws {
     
 //    let view = try c.make(ViewRenderer.self)
 
-    app.get { req -> EventLoopFuture<View> in
-        
-        struct WelcomePageData: Content {
-            var items: [String] = []
-            var title = "欢迎"
-        }
-        
-        return req.view.render("welcome", WelcomePageData())
+    app.get { // req -> EventLoopFuture<View> in
+        $0.view.render("welcome")
     }
-    
-//    app.get { req in
-//        return "It works!"
-//    }
     
     app.get("hello") { req in
         return "Hello, world!"
