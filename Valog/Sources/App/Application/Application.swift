@@ -24,8 +24,14 @@ extension Application {
             withIntermediateDirectories: true,
             attributes: nil
         )
+        
+        try SimpleShell.runSynchronously(cmd: "mkdir GitTest")
+        try SimpleShell.runSynchronously(
+            //            cmd: "git clone https://github.com/Harley-xk/MySite.git --branch=gh-pages",
+            cmd: "git clone https://github.com/Harley-xk/LiteStory-iOS.git",
+            on: self.directory.workingDirectory + "GitTest/"
+        )
     }
-    
 }
 
 extension DirectoryConfiguration {

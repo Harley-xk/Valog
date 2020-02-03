@@ -8,7 +8,7 @@
 import Fluent
 import Vapor
 
-final class User: ModelUser, Content {
+final class User: ModelUser {
     
     static let schema = "Users"
     
@@ -62,3 +62,26 @@ final class User: ModelUser, Content {
     }
 }
 
+extension User: ResponseEncodable {
+    
+    func encodeResponse(for request: Request) -> EventLoopFuture<Response> {
+        let response = Response()
+        do {
+            let publicUser = Public(from: self)
+            try response.content.encode(publicUser)
+        } catch {
+            return request.eventLoop.makeFailedFuture(error)
+        }
+        return request.eventLoop.makeSucceededFuture(response)
+    }
+    
+    struct Public: Content {
+        var nickname: String
+        var roles: [Role]
+        
+        init(from model: User) {
+            nickname = model.nickname
+            roles = model.roles
+        }
+    }
+}
