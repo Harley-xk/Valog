@@ -1,5 +1,5 @@
-import Fluent
-import FluentSQLiteDriver
+//import Fluent
+//import FluentSQLiteDriver
 import Vapor
 import Leaf
 
@@ -16,10 +16,10 @@ public func configure(_ app: Application) throws {
     app.middleware.use(FileMiddleware(publicDirectory: app.directory.publicDirectory))
     
     // Configure SQLite database
-    app.databases.use(.sqlite(.file(app.directory.dataDirectory + "Data.sqlite")), as: .sqlite)
+//    app.databases.use(.sqlite(.file(app.directory.dataDirectory + "Data.sqlite")), as: .sqlite)
 
     // Configure migrations
-    try prepareMigrations(app)
+//    try prepareMigrations(app)
     
     // Configure routes
     try routes(app)

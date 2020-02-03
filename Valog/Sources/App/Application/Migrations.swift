@@ -7,14 +7,14 @@
 
 import Foundation
 import Vapor
-import Fluent
-
-public func prepareMigrations(_ app: Application) throws {
-        
-    app.migrations.add(CreateTodo())
-    app.migrations.add(CreateUser())
-    app.migrations.add(CreateMaster())
-    
-    try app.autoMigrate().wait()
-}
+//import Fluent
+//
+//public func prepareMigrations(_ app: Application) throws {
+//        
+//    app.migrations.add(CreateTodo())
+//    app.migrations.add(CreateUser())
+//    app.migrations.add(CreateMaster())
+//    
+//    try app.autoMigrate().wait()
+//}
 
