@@ -12,6 +12,8 @@ func routes(_ app: Application) throws {
     app.get("hello") { req in
         return "Hello, world!"
     }
+    
+    try app.register(collection: PostController())
 
 //    let todoController = TodoController()
 //    app.get("todos", use: todoController.index)

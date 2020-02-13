@@ -24,7 +24,7 @@ let package = Package(
         .package(url: "https://github.com/krzyzanowskim/CryptoSwift.git", .upToNextMajor(from: "1.0.0"))
     ],
     targets: [
-        .target(name: "App", dependencies: ["Fluent", "FluentMySQLDriver", "Html", "Vapor"]),
+        .target(name: "App", dependencies: ["Fluent", "FluentMySQLDriver", "Html", "CryptoSwift", "Vapor"]),
 //        .target(name: "App", dependencies: ["Leaf", "Vapor"]),
         .target(name: "Run", dependencies: ["App"]),
     ]
