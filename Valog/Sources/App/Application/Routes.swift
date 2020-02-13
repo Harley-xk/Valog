@@ -5,8 +5,8 @@ func routes(_ app: Application) throws {
     
 //    let view = try c.make(ViewRenderer.self)
 
-    app.get { // req -> EventLoopFuture<View> in
-        $0.view.render("welcome")
+    app.get { _ in // req -> EventLoopFuture<View> in
+        welcome()
     }
     
     app.get("hello") { req in

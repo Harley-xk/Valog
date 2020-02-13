@@ -15,8 +15,8 @@
         "repositoryURL": "https://github.com/vapor/async-kit.git",
         "state": {
           "branch": null,
-          "revision": "8e9d41f31848809732661563b334c1bb1c93cf1a",
-          "version": "1.0.0-beta.2.2"
+          "revision": "e67124898436b463af4eec9f98b17aff51f2d9bb",
+          "version": "1.0.0-beta.2.3"
         }
       },
       {
@@ -29,21 +29,30 @@
         }
       },
       {
-        "package": "leaf",
-        "repositoryURL": "https://github.com/vapor/leaf.git",
+        "package": "fluent",
+        "repositoryURL": "https://github.com/vapor/fluent.git",
         "state": {
           "branch": null,
-          "revision": "7f7f19a2ac646234510d9ed65c1ce68af1a75aaa",
-          "version": "4.0.0-beta.2"
+          "revision": "74c64be71d63895cc81a00ed5a39a490a79250f8",
+          "version": "4.0.0-beta.2.4"
         }
       },
       {
-        "package": "leaf-kit",
-        "repositoryURL": "https://github.com/vapor/leaf-kit.git",
+        "package": "fluent-kit",
+        "repositoryURL": "https://github.com/vapor/fluent-kit.git",
         "state": {
           "branch": null,
-          "revision": "0094f150ae8e96f85096f0d41229d7464fe99841",
-          "version": "1.0.0-beta.2"
+          "revision": "5204959727ed8d5d458f626b703ab12cad1879e1",
+          "version": "1.0.0-beta.3.3"
+        }
+      },
+      {
+        "package": "fluent-mysql-driver",
+        "repositoryURL": "https://github.com/vapor/fluent-mysql-driver.git",
+        "state": {
+          "branch": null,
+          "revision": "44e33fb5f71a000b7b819be8da222325d832620b",
+          "version": "4.0.0-beta.2.2"
         }
       },
       {
@@ -53,6 +62,24 @@
           "branch": null,
           "revision": "b41a49b5756ac3fbf8f2b07228a7e75f9b60731a",
           "version": "4.0.0-beta.2"
+        }
+      },
+      {
+        "package": "mysql-kit",
+        "repositoryURL": "https://github.com/vapor/mysql-kit.git",
+        "state": {
+          "branch": null,
+          "revision": "bbd0e70493aa8facbeb2951b1dfa2de6f9b13409",
+          "version": "4.0.0-beta.3.1"
+        }
+      },
+      {
+        "package": "mysql-nio",
+        "repositoryURL": "https://github.com/vapor/mysql-nio.git",
+        "state": {
+          "branch": null,
+          "revision": "45321a5bae0df89dfff51f6534183fbbeaf8494b",
+          "version": "1.0.0-beta.2.3"
         }
       },
       {
@@ -74,12 +101,30 @@
         }
       },
       {
+        "package": "sql-kit",
+        "repositoryURL": "https://github.com/vapor/sql-kit.git",
+        "state": {
+          "branch": null,
+          "revision": "06e3b5c614eec625380d96554f52c06ffe862ae8",
+          "version": "3.0.0-beta.6.2"
+        }
+      },
+      {
         "package": "swift-backtrace",
         "repositoryURL": "https://github.com/ianpartridge/swift-backtrace.git",
         "state": {
           "branch": null,
           "revision": "eaf2cef011c0c23d1701aa60b364def8015dc3c7",
           "version": "1.1.1"
+        }
+      },
+      {
+        "package": "Html",
+        "repositoryURL": "https://github.com/pointfreeco/swift-html.git",
+        "state": {
+          "branch": null,
+          "revision": "3ffc3fc8feb5fde766f5f44fd06ebc030f0721f3",
+          "version": "0.3.1"
         }
       },
       {
@@ -96,8 +141,8 @@
         "repositoryURL": "https://github.com/apple/swift-metrics.git",
         "state": {
           "branch": null,
-          "revision": "3fefedaaef285830cc98ae80231140122076a7e0",
-          "version": "1.2.0"
+          "revision": "09b72f68ed9b01b614c12855fc7e22876b97a97e",
+          "version": "1.2.1"
         }
       },
       {
@@ -105,8 +150,8 @@
         "repositoryURL": "https://github.com/apple/swift-nio.git",
         "state": {
           "branch": null,
-          "revision": "4409b57d4c0c40d41ac2b320fccf02e4d451e3db",
-          "version": "2.13.0"
+          "revision": "df9390006bce7da1b6273f804d3acbbfdfcc6154",
+          "version": "2.13.1"
         }
       },
       {
@@ -137,12 +182,21 @@
         }
       },
       {
+        "package": "SnapshotTesting",
+        "repositoryURL": "https://github.com/pointfreeco/swift-snapshot-testing.git",
+        "state": {
+          "branch": null,
+          "revision": "114882386a815f4a2e6d8f2f7ee4857acd372438",
+          "version": "1.7.2"
+        }
+      },
+      {
         "package": "vapor",
         "repositoryURL": "https://github.com/vapor/vapor.git",
         "state": {
           "branch": null,
-          "revision": "1406764b673400c249da39ed309bf0a3203915a4",
-          "version": "4.0.0-beta.3.9"
+          "revision": "692949445f472eb58aff51092283e1d192547faa",
+          "version": "4.0.0-beta.3.15"
         }
       },
       {

@@ -14,14 +14,16 @@ let package = Package(
         // 💧 A server-side Swift web framework.
         .package(url: "https://github.com/vapor/vapor.git", from: "4.0.0-beta.2"),
         // 🍃 An expressive, performant, and extensible templating language built for Swift.
-        .package(url: "https://github.com/vapor/leaf.git", from: "4.0.0-alpha.1"),
+//        .package(url: "https://github.com/vapor/leaf.git", from: "4.0.0-alpha.1"),
+        // 🗺 A Swift DSL for type-safe, extensible, and transformable HTML documents.
+        .package(url: "https://github.com/pointfreeco/swift-html.git", from: "0.3.0"),
         // Fluent
-//        .package(url: "https://github.com/vapor/fluent.git", from: "4.0.0-beta.2"),
-//        .package(url: "https://github.com/vapor/fluent-sqlite-driver.git", from: "4.0.0-beta.2"),
+        .package(url: "https://github.com/vapor/fluent.git", from: "4.0.0-beta"),
+        .package(url: "https://github.com/vapor/fluent-mysql-driver.git", from: "4.0.0-beta"),
     ],
     targets: [
-//        .target(name: "App", dependencies: ["Fluent", "FluentSQLiteDriver", "Leaf", "Vapor"]),
-        .target(name: "App", dependencies: ["Leaf", "Vapor"]),
+        .target(name: "App", dependencies: ["Fluent", "FluentMySQLDriver", "Html", "Vapor"]),
+//        .target(name: "App", dependencies: ["Leaf", "Vapor"]),
         .target(name: "Run", dependencies: ["App"]),
     ]
 )
