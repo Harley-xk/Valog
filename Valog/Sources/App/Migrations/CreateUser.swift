@@ -1,55 +1,54 @@
-////
-////  CreateUser.swift
-////  App
-////
-////  Created by Harley-xk on 2020/1/29.
-////
 //
-//import Vapor
-//import Fluent
+//  CreateUser.swift
+//  App
 //
-//struct CreateUser: Migration {
-//    func revert(on database: Database) -> EventLoopFuture<Void> {
-//        return database.schema(User.schema).delete()
-//    }
-//    
-//    func prepare(on database: Database) -> EventLoopFuture<Void> {
-//        return database.schema(User.schema)
-//            .field("id", .int, .identifier(auto: true))
-//            .field("email", .string, .required)
-//            .field("password", .string, .required)
-//            .field("nickname", .string, .required)
-//            .field("contact", .json)
-//            .field("roles", .array(of: .string), .required)
-//            .field("created_at", .datetime)
-//            .field("deleted_at", .datetime)
-//            .unique(on: "email")
-//            .create()
-//    }
-//}
+//  Created by Harley-xk on 2020/1/29.
 //
-//struct CreateMaster: Migration {
-//    func prepare(on database: Database) -> EventLoopFuture<Void> {
-//        let master = User()
-//        master.email = "harley.gb@foxmail.com"
-//        let password = UUID().uuidString
-//        master.password = try! Bcrypt.hash(password)
-//        master.nickname = "Harley"
-//        master.contact = User.Contact(phone: "17625809396", wechat: "wx_8772836", twitter: nil)
-//        master.roles = User.Role.allCases
-//        return master.create(on: database).map { _ in 
-//            Logger(label: "Valog").info(
-//                """
-//                ==> master created
-//                -----------> email: \(master.email)
-//                -----------> password: \(password)
-//                -----------
-//                """
-//            )
-//        }
-//    }
-//    
-//    func revert(on database: Database) -> EventLoopFuture<Void> {
-//        return User.query(on: database).filter(\.$email == "harley.gb@foxmail.com").delete()
-//    }
-//}
+
+import Vapor
+import Fluent
+
+struct CreateUser: Migration {
+    func revert(on database: Database) -> EventLoopFuture<Void> {
+        return database.schema(User.schema).delete()
+    }
+    
+    func prepare(on database: Database) -> EventLoopFuture<Void> {
+        return database.schema(User.schema)
+            .field("id", .int, .identifier(auto: true))
+            .field("username", .string, .required)
+            .field("password", .string, .required)
+            .field("nickname", .string, .required)
+            .field("contact", .json)
+            .field("roles", .array(of: .string), .required)
+            .field("created_at", .datetime)
+            .field("deleted_at", .datetime)
+            .unique(on: "username")
+            .create()
+    }
+}
+
+struct CreateMaster: Migration {
+    func prepare(on database: Database) -> EventLoopFuture<Void> {
+        let password = UUID().uuidString
+        let master = try! User(email: "harley.gb@foxmail.com", pass: password)
+        master.nickname = "Harley-xk"
+        master.contact?.phone = "17625809396"
+        master.contact?.wechat = "wx_8772836"
+        master.roles = User.Role.allCases
+        return master.create(on: database).map { _ in
+            Logger(label: "Valog").info(
+                """
+                ==> master created
+                -----------> username: \(master.username)
+                -----------> password: \(password)
+                -----------
+                """
+            )
+        }
+    }
+    
+    func revert(on database: Database) -> EventLoopFuture<Void> {
+        return User.query(on: database).filter(\.$username == "harley.gb@foxmail.com").delete()
+    }
+}

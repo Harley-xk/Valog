@@ -27,7 +27,7 @@ extension Node {
                 ],
                 .span(attributes: [.class("navbar-toggler-icon")])
             ),
-            .a(attributes: [.class("navbar-brand"), .href("#")], "Navbar"),
+            .a(attributes: [.class("navbar-brand"), .href("/")], "Harley's Studio"),
             .div(
                 attributes: [.class("collapse navbar-collapse"), .id("navbarSupportedContent")],
                 .ul(
@@ -42,7 +42,7 @@ extension Node {
                 .input(attributes: [
                     .class("form-control mr-sm-2"),
                     .type(.search),
-                    .placeholder("Search"),
+                    .placeholder("搜索文章"),
                     .ariaLabel("Search")
                 ]),
                 .button(attributes: [
