@@ -20,6 +20,8 @@ let package = Package(
         // Fluent
         .package(url: "https://github.com/vapor/fluent.git", from: "4.0.0-beta"),
         .package(url: "https://github.com/vapor/fluent-mysql-driver.git", from: "4.0.0-beta"),
+        // CryptoSwift
+        .package(url: "https://github.com/krzyzanowskim/CryptoSwift.git", .upToNextMajor(from: "1.0.0"))
     ],
     targets: [
         .target(name: "App", dependencies: ["Fluent", "FluentMySQLDriver", "Html", "Vapor"]),
