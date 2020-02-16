@@ -20,17 +20,18 @@ extension Application {
 
         // create storage directory
         try FileManager.default.createDirectory(
-            atPath: directory.dataDirectory,
+            atPath: directory.storageDirectory,
             withIntermediateDirectories: true,
             attributes: nil
         )
-//
-//        try SimpleShell.runSynchronously(cmd: "mkdir GitTest")
-//        try SimpleShell.runSynchronously(
-//            //            cmd: "git clone https://github.com/Harley-xk/MySite.git --branch=gh-pages",
-//            cmd: "git clone https://github.com/Harley-xk/LiteStory-iOS.git",
-//            on: self.directory.workingDirectory + "GitTest/"
-//        )
+        
+        // clone posts
+        if !Path(directory.storageDirectory + "Posts").exists {
+            try SimpleShell.runSynchronously(
+                cmd: "git clone https://github.com/Harley-xk/Posts.git",
+                on: directory.storageDirectory
+            )
+        }
     }
 }
 

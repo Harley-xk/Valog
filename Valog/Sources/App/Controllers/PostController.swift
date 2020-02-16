@@ -19,12 +19,16 @@ final class PostController: RouteCollection {
     func allPosts(_ request: Request) throws -> EventLoopFuture<[Post]> {
         return request.redis.get(Post.Keys.list, asJSON: [Post].self).flatMapThrows { (posts) -> EventLoopFuture<[Post]> in
             guard let list = posts else {
-                let path = Path(request.application.directory.storageDirectory)
-                let results = try self.findPosts(in: path)
-                return request.redis.set(Post.Keys.list, toJSON: results).transform(to: results)
+                return try self.cachePosts(request)
             }
             return request.application.eventLoopGroup.future(list)
         }
+    }
+    
+    func cachePosts(_ request: Request) throws -> EventLoopFuture<[Post]> {
+        let path = Path(request.application.directory.storageDirectory)
+        let results = try self.findPosts(in: path)
+        return request.redis.set(Post.Keys.list, toJSON: results).transform(to: results)
     }
     
     func findPosts(in directory: Path) throws -> [Post] {
