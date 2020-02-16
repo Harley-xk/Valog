@@ -39,16 +39,22 @@ final class PostController: RouteCollection {
     func decodePost(from path: Path) throws -> Post {
         let dataFile = path + Path("content.json")
         let data = try Data(contentsOf: dataFile.url)
-        return try JSONDecoder().decode(Post.self, from: data)
+        return try Post.decode(from: data)
     }
     
 }
 
 final class Post: Content {
     
-    var id: String {
-        return date.md5()
+    static func decode(from data: Data) throws -> Post {
+        let post = try JSONDecoder().decode(Post.self, from: data)
+        post.id = post.date.md5()
+        post.views = Int.random(in: 1 ... 20)
+        post.comments = Int.random(in: 1 ... 20)
+        return post
     }
+    
+    var id: String!
     
     var title: String
     
@@ -60,4 +66,7 @@ final class Post: Content {
     
     var categories: [String]?
     
+    var views: Int!
+    
+    var comments: Int!
 }

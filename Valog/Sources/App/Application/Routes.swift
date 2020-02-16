@@ -5,15 +5,16 @@ func routes(_ app: Application) throws {
     
 //    let view = try c.make(ViewRenderer.self)
 
-    app.get { _ in // req -> EventLoopFuture<View> in
-        welcome()
-    }
+//    app.get { _ in // req -> EventLoopFuture<View> in
+//        welcome()
+//    }
     
     app.get("hello") { req in
         return "Hello, world!"
     }
     
-    try app.register(collection: PostController())
+    try app.grouped("api")
+        .register(collection: PostController())
 
 //    let todoController = TodoController()
 //    app.get("todos", use: todoController.index)
