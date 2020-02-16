@@ -16,7 +16,11 @@ class WebhooksController: RouteCollection {
     
     func pushAction(_ request: Request) throws -> HTTPStatus {
         
-        print(request.headers)
+        print("== Headers ==")
+        request.headers.forEach { (name, value) in
+            print("\(name) : \(value)")
+        }
+        print("== Body ==")
         print(request.body.string ?? "<empty body>")
         
         return .ok

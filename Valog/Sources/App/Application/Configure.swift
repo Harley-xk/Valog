@@ -16,27 +16,27 @@ public func configure(_ app: Application) throws {
     app.server.configuration.hostname = config.server.host
     app.server.configuration.port = config.server.port
 
-    app.redis.configuration = RedisKit.RedisConfiguration(
-        hostname: config.redis.host,
-        port: config.redis.port,
-        password: config.redis.password
-    )
+//    app.redis.configuration = RedisKit.RedisConfiguration(
+//        hostname: config.redis.host,
+//        port: config.redis.port,
+//        password: config.redis.password
+//    )
     
     // Serves files from `Public/` directory
     app.middleware.use(FileMiddleware(publicDirectory: app.directory.publicDirectory))
     
     // Configure MySQL database
-    app.databases.use(.mysql(
-        hostname: config.database.host,
-        port: config.database.port,
-        username: config.database.username,
-        password: config.database.password,
-        database: config.database.name,
-        tlsConfiguration: .none
-    ), as: .mysql)
+//    app.databases.use(.mysql(
+//        hostname: config.database.host,
+//        port: config.database.port,
+//        username: config.database.username,
+//        password: config.database.password,
+//        database: config.database.name,
+//        tlsConfiguration: .none
+//    ), as: .mysql)
 
     // Configure migrations
-    try prepareMigrations(app)
+//    try prepareMigrations(app)
     
     // Configure routes
     try routes(app)
