@@ -17,9 +17,7 @@ extension Application {
     
     func beforeConfigure() throws {
         runningApplication = self
-        
-        server.configuration.hostname = "0.0.0.0"
-        
+
         // create storage directory
         try FileManager.default.createDirectory(
             atPath: directory.dataDirectory,
