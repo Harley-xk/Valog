@@ -13,8 +13,9 @@ func routes(_ app: Application) throws {
         return "Hello, world!"
     }
     
-    try app.grouped("api")
-        .register(collection: PostController())
+    let api = app.grouped("api")
+    try api.register(collection: PostController())
+    try api.register(collection: WebhooksController())
 
 //    let todoController = TodoController()
 //    app.get("todos", use: todoController.index)
