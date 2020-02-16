@@ -101,6 +101,24 @@
         }
       },
       {
+        "package": "redis",
+        "repositoryURL": "https://github.com/vapor/redis",
+        "state": {
+          "branch": null,
+          "revision": "fded401c3df6bfe148535b7206f5c2bd188e5a3a",
+          "version": "4.0.0-beta.3"
+        }
+      },
+      {
+        "package": "redis-kit",
+        "repositoryURL": "https://github.com/vapor/redis-kit.git",
+        "state": {
+          "branch": null,
+          "revision": "7d6bf6f4b8ca9198de0d1c8e959e27514656c101",
+          "version": "1.0.0-beta.3"
+        }
+      },
+      {
         "package": "routing-kit",
         "repositoryURL": "https://github.com/vapor/routing-kit.git",
         "state": {
@@ -128,15 +146,6 @@
         }
       },
       {
-        "package": "Html",
-        "repositoryURL": "https://github.com/pointfreeco/swift-html.git",
-        "state": {
-          "branch": null,
-          "revision": "3ffc3fc8feb5fde766f5f44fd06ebc030f0721f3",
-          "version": "0.3.1"
-        }
-      },
-      {
         "package": "swift-log",
         "repositoryURL": "https://github.com/apple/swift-log.git",
         "state": {
@@ -159,8 +168,8 @@
         "repositoryURL": "https://github.com/apple/swift-nio.git",
         "state": {
           "branch": null,
-          "revision": "df9390006bce7da1b6273f804d3acbbfdfcc6154",
-          "version": "2.13.1"
+          "revision": "16ab4d657e1ad4e77bd5f8b94af8538561643053",
+          "version": "2.14.0"
         }
       },
       {
@@ -191,12 +200,12 @@
         }
       },
       {
-        "package": "SnapshotTesting",
-        "repositoryURL": "https://github.com/pointfreeco/swift-snapshot-testing.git",
+        "package": "redi-stack",
+        "repositoryURL": "https://gitlab.com/mordil/swift-redi-stack.git",
         "state": {
           "branch": null,
-          "revision": "114882386a815f4a2e6d8f2f7ee4857acd372438",
-          "version": "1.7.2"
+          "revision": "8d85cb2bfaef91ffb048f1ea6d0c1c6fc04c70e9",
+          "version": "1.0.0-alpha.7.1"
         }
       },
       {

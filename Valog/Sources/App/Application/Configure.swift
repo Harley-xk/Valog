@@ -1,17 +1,16 @@
 //import Fluent
 //import FluentSQLiteDriver
 import Vapor
-import Leaf
 import FluentMySQLDriver
+import Redis
 
 // Called before your application initializes.
 public func configure(_ app: Application) throws {
     
     // initialize
     try app.beforeConfigure()
-
-    // Leaf Template Renderer
-    app.views.use(.leaf)
+    
+    app.redis.configuration = .init()
     
     // Serves files from `Public/` directory
     app.middleware.use(FileMiddleware(publicDirectory: app.directory.publicDirectory))

@@ -46,3 +46,15 @@ extension DirectoryConfiguration {
         return storageDirectory + "Data/"
     }
 }
+
+extension EventLoopFuture {
+    public func flatMapThrows<NewValue>(file: StaticString = #file, line: UInt = #line, _ callback: @escaping (Value) throws -> EventLoopFuture<NewValue>) -> EventLoopFuture<NewValue> {
+        return flatMap { (value) -> EventLoopFuture<NewValue> in
+            do {
+                return try callback(value)
+            } catch {
+                return self.eventLoop.future(error: error)
+            }
+        }
+    }
+}

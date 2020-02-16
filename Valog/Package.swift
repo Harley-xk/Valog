@@ -16,7 +16,7 @@ let package = Package(
         // 🍃 An expressive, performant, and extensible templating language built for Swift.
 //        .package(url: "https://github.com/vapor/leaf.git", from: "4.0.0-alpha.1"),
         // 🗺 A Swift DSL for type-safe, extensible, and transformable HTML documents.
-        .package(url: "https://github.com/pointfreeco/swift-html.git", from: "0.3.0"),
+        .package(url: "https://github.com/vapor/redis", from: "4.0.0-beta.3"),
         // Fluent
         .package(url: "https://github.com/vapor/fluent.git", from: "4.0.0-beta"),
         .package(url: "https://github.com/vapor/fluent-mysql-driver.git", from: "4.0.0-beta"),
@@ -24,7 +24,7 @@ let package = Package(
         .package(url: "https://github.com/krzyzanowskim/CryptoSwift.git", .upToNextMajor(from: "1.0.0"))
     ],
     targets: [
-        .target(name: "App", dependencies: ["Fluent", "FluentMySQLDriver", "Html", "CryptoSwift", "Vapor"]),
+        .target(name: "App", dependencies: ["Fluent", "FluentMySQLDriver", "Redis", "CryptoSwift", "Vapor"]),
 //        .target(name: "App", dependencies: ["Leaf", "Vapor"]),
         .target(name: "Run", dependencies: ["App"]),
     ]
