@@ -7,7 +7,7 @@ let package = Package(
        .macOS(.v10_14)
     ],
     products: [
-        .executable(name: "Run", targets: ["Run"]),
+        .executable(name: "Valog", targets: ["Valog"]),
         .library(name: "App", targets: ["App"]),
     ],
     dependencies: [
@@ -26,7 +26,7 @@ let package = Package(
     targets: [
         .target(name: "App", dependencies: ["Fluent", "FluentMySQLDriver", "Redis", "CryptoSwift", "Vapor"]),
 //        .target(name: "App", dependencies: ["Leaf", "Vapor"]),
-        .target(name: "Run", dependencies: ["App"]),
+        .target(name: "Valog", dependencies: ["App"]),
     ]
 )
 
