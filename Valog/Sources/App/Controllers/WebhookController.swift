@@ -14,7 +14,7 @@ class WebhooksController: RouteCollection {
         routes.post("webhook", use: pushAction)
     }
     
-    func pushAction(_ request: Request) throws -> HTTPStatus {
+    func pushAction(_ request: Request) throws -> EventLoopFuture<HTTPStatus> {
         
         let action = try request.content.decode(PushAction.self)
         
@@ -40,9 +40,7 @@ class WebhooksController: RouteCollection {
             on: request.application.directory.workingDirectory + "Storage/Posts"
         )
         
-        _ = try PostController().cachePosts(request)
-        
-        return .ok
+        return try PostController().reloadPosts(request).transform(to: HTTPStatus.ok)
     }
     
 }

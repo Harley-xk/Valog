@@ -16,67 +16,45 @@ final class PostController: RouteCollection {
         routes.get("posts", use: allPosts)
     }
     
-    func allPosts(_ request: Request) throws -> EventLoopFuture<[Post]> {
-        return request.redis.get(Post.Keys.list, asJSON: [Post].self).flatMapThrows { (posts) -> EventLoopFuture<[Post]> in
-            guard let list = posts else {
-                return try self.cachePosts(request)
+    func allPosts(_ request: Request) throws -> EventLoopFuture<[Post.Public]> {
+        return request.redis.get(Post.Keys.list, asJSON: [Post.Public].self).flatMapThrows { (posts) -> EventLoopFuture<[Post.Public]> in
+            guard let list = posts, list.count > 0 else {
+                return try self.reloadPosts(request)
             }
-            return request.application.eventLoopGroup.future(list)
+            return request.eventLoop.future(list)
         }
     }
     
-    func cachePosts(_ request: Request) throws -> EventLoopFuture<[Post]> {
+    func reloadPosts(_ request: Request) throws -> EventLoopFuture<[Post.Public]> {
         let path = Path(request.application.directory.storageDirectory)
         let results = try self.findPosts(in: path)
-        return request.redis.set(Post.Keys.list, toJSON: results).transform(to: results)
+        return results.compactMap { info in
+            return Post.query(on: request.db).filter(\.$date == info.date).first().flatMapThrows { (post) -> EventLoopFuture<Post.Public> in
+                guard let post = post else {
+                    let model = info.makeModel()
+                    return model.create(on: request.db).transform(to: model.makePublic())
+                }
+                post.update(from: info)
+                return post.update(on: request.db).transform(to: post.makePublic())
+            }
+        }.flatten(on: request.eventLoop)
     }
     
-    func findPosts(in directory: Path) throws -> [Post] {
-        var posts: [Post] = []
+    func findPosts(in directory: Path) throws -> [PostInfo] {
+        var posts: [PostInfo] = []
         for path in try directory.children() {
             guard path.isDirectory else {
                 continue
             }
             if path.extension == "post" {
-                try posts.append(decodePost(from: path))
+                let dataFile = path + Path("content.json")
+                var info = try PostInfo.decode(from: dataFile)
+                info.filePath = path.string
+                posts.append(info)
             } else {
                 try posts.append(contentsOf: findPosts(in: path))
             }
         }
         return posts
     }
-    
-    func decodePost(from path: Path) throws -> Post {
-        let dataFile = path + Path("content.json")
-        let data = try Data(contentsOf: dataFile.url)
-        return try Post.decode(from: data)
-    }
-    
-}
-
-final class Post: Content {
-    
-    static func decode(from data: Data) throws -> Post {
-        let post = try JSONDecoder().decode(Post.self, from: data)
-        post.id = post.date.md5()
-        post.views = Int.random(in: 1 ... 20)
-        post.comments = Int.random(in: 1 ... 20)
-        return post
-    }
-    
-    var id: String!
-    
-    var title: String
-    
-    var date: String
-    
-    var intro: String?
-    
-    var tags: [String]?
-    
-    var categories: [String]?
-    
-    var views: Int!
-    
-    var comments: Int!
 }

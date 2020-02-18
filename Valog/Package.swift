@@ -19,12 +19,12 @@ let package = Package(
         .package(url: "https://github.com/vapor/redis", from: "4.0.0-beta.3"),
         // Fluent
         .package(url: "https://github.com/vapor/fluent.git", from: "4.0.0-beta"),
-        .package(url: "https://github.com/vapor/fluent-mysql-driver.git", from: "4.0.0-beta"),
+        .package(url: "https://github.com/vapor/fluent-postgres-driver.git", from: "2.0.0-beta"),
         // CryptoSwift
         .package(url: "https://github.com/krzyzanowskim/CryptoSwift.git", .upToNextMajor(from: "1.0.0"))
     ],
     targets: [
-        .target(name: "App", dependencies: ["Fluent", "FluentMySQLDriver", "Redis", "CryptoSwift", "Vapor"]),
+        .target(name: "App", dependencies: ["Fluent", "FluentPostgresDriver", "Redis", "CryptoSwift", "Vapor"]),
 //        .target(name: "App", dependencies: ["Leaf", "Vapor"]),
         .target(name: "Valog", dependencies: ["App"]),
     ]

@@ -31,7 +31,7 @@ extension Application {
                 cmd: "git clone https://github.com/Harley-xk/Posts.git",
                 on: directory.storageDirectory
             )
-        }
+        }        
     }
 }
 

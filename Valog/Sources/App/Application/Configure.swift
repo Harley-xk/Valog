@@ -1,7 +1,7 @@
 //import Fluent
 //import FluentSQLiteDriver
 import Vapor
-import FluentMySQLDriver
+import FluentPostgresDriver
 import Redis
 
 // Called before your application initializes.
@@ -25,15 +25,22 @@ public func configure(_ app: Application) throws {
     // Serves files from `Public/` directory
     app.middleware.use(FileMiddleware(publicDirectory: app.directory.publicDirectory))
     
-    // Configure MySQL database
-    app.databases.use(.mysql(
+    app.databases.use(.postgres(
         hostname: config.database.host,
-        port: config.database.port,
         username: config.database.username,
         password: config.database.password,
-        database: config.database.name,
-        tlsConfiguration: .none
-    ), as: .mysql)
+        database: config.database.name
+        ), as: .psql)
+    
+    // Configure MySQL database
+//    app.databases.use(.mysql(
+//        hostname: config.database.host,
+//        port: config.database.port,
+//        username: config.database.username,
+//        password: config.database.password,
+//        database: config.database.name,
+//        tlsConfiguration: .none
+//    ), as: .mysql)
 
     // Configure migrations
     try prepareMigrations(app)
@@ -52,7 +59,7 @@ struct Config: Codable {
     struct Database: Codable {
         var name: String
         var host: String
-        var port: Int
+        var port: Int?
         var username: String
         var password: String
     }

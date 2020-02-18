@@ -14,6 +14,7 @@ public func prepareMigrations(_ app: Application) throws {
     app.migrations.add(CreateTodo())
     app.migrations.add(CreateUser())
     app.migrations.add(CreateMaster())
+    app.migrations.add(CreatePosts())
     
     try app.autoMigrate().wait()
 }

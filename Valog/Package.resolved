@@ -56,12 +56,12 @@
         }
       },
       {
-        "package": "fluent-mysql-driver",
-        "repositoryURL": "https://github.com/vapor/fluent-mysql-driver.git",
+        "package": "fluent-postgres-driver",
+        "repositoryURL": "https://github.com/vapor/fluent-postgres-driver.git",
         "state": {
           "branch": null,
-          "revision": "16a462cb2b69a48785dcfcd1abd6caf728f879fd",
-          "version": "4.0.0-beta.3"
+          "revision": "9244cb2c028cb3e6938a17d6d1200c3bd51da997",
+          "version": "2.0.0-beta.3"
         }
       },
       {
@@ -74,30 +74,30 @@
         }
       },
       {
-        "package": "mysql-kit",
-        "repositoryURL": "https://github.com/vapor/mysql-kit.git",
-        "state": {
-          "branch": null,
-          "revision": "0afdcf87f244bed6494d21ea86beeb51a4a85d9a",
-          "version": "4.0.0-beta.3.2"
-        }
-      },
-      {
-        "package": "mysql-nio",
-        "repositoryURL": "https://github.com/vapor/mysql-nio.git",
-        "state": {
-          "branch": null,
-          "revision": "45321a5bae0df89dfff51f6534183fbbeaf8494b",
-          "version": "1.0.0-beta.2.3"
-        }
-      },
-      {
         "package": "open-crypto",
         "repositoryURL": "https://github.com/vapor/open-crypto.git",
         "state": {
           "branch": null,
           "revision": "90c49bc68ee6d992fa13cf84ca8fc54b97eaf4cc",
           "version": "4.0.0-beta.2"
+        }
+      },
+      {
+        "package": "postgres-kit",
+        "repositoryURL": "https://github.com/vapor/postgres-kit.git",
+        "state": {
+          "branch": null,
+          "revision": "222dcf753c2018cbd9a0f8977b9e647da4ff5aa8",
+          "version": "2.0.0-beta.3.6"
+        }
+      },
+      {
+        "package": "postgres-nio",
+        "repositoryURL": "https://github.com/vapor/postgres-nio.git",
+        "state": {
+          "branch": null,
+          "revision": "0206f13dc3d5a4143519f30be0554a083d6da856",
+          "version": "1.0.0-beta.2.8"
         }
       },
       {
@@ -213,8 +213,8 @@
         "repositoryURL": "https://github.com/vapor/vapor.git",
         "state": {
           "branch": null,
-          "revision": "ab9d9cf8a2265128184ec8bdd0049ce86dec9305",
-          "version": "4.0.0-beta.3.19"
+          "revision": "7bd5d33834bccb1c6e02f38a0c3c45e1dca5ec3f",
+          "version": "4.0.0-beta.3.21"
         }
       },
       {

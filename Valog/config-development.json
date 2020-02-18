@@ -4,11 +4,10 @@
     "port": 8080
   },
   "database": {
-    "name": "Valog",
+    "name": "Harley-xk",
     "host": "localhost",
-    "port": 8889,
-    "username": "root",
-    "password": "root"
+    "username": "Harley-xk",
+    "password": "123456"
   },
   "redis": {
     "host": "localhost",
