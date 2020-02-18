@@ -17,12 +17,7 @@ final class PostController: RouteCollection {
     }
     
     func allPosts(_ request: Request) throws -> EventLoopFuture<[Post.Public]> {
-        return request.redis.get(Post.Keys.list, asJSON: [Post.Public].self).flatMapThrows { (posts) -> EventLoopFuture<[Post.Public]> in
-            guard let list = posts, list.count > 0 else {
-                return try self.reloadPosts(request)
-            }
-            return request.eventLoop.future(list)
-        }
+        return Post.query(on: request.db).all().mapEachCompact { $0.makePublic() }
     }
     
     func reloadPosts(_ request: Request) throws -> EventLoopFuture<[Post.Public]> {
