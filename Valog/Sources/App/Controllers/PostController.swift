@@ -16,8 +16,10 @@ final class PostController: RouteCollection {
         routes.get("posts", use: allPosts)
     }
     
-    func allPosts(_ request: Request) throws -> EventLoopFuture<[Post.Public]> {
-        return Post.query(on: request.db).all().mapEachCompact { $0.makePublic() }
+    func allPosts(_ request: Request) throws -> EventLoopFuture<Page<Post.Public>> {
+        return Post.query(on: request.db).sort(\.$date, .descending).paginate(for: request).map { (page) -> (Page<Post.Public>) in
+            page.map { $0.makePublic() }
+        }
     }
     
     func reloadPosts(_ request: Request) throws -> EventLoopFuture<[Post.Public]> {
@@ -41,15 +43,32 @@ final class PostController: RouteCollection {
             guard path.isDirectory else {
                 continue
             }
-            if path.extension == "post" {
-                let dataFile = path + Path("content.json")
-                var info = try PostInfo.decode(from: dataFile)
-                info.filePath = path.string
+            if let info = try decodePost(from: path) {
                 posts.append(info)
-            } else {
-                try posts.append(contentsOf: findPosts(in: path))
             }
+            try posts.append(contentsOf: findPosts(in: path))
         }
         return posts
+    }
+    
+    func decodePost(from directory: Path) throws -> PostInfo? {
+        
+        var postInfo: PostInfo?
+        var markdownPath: Path?
+        
+        for path in try directory.children() {
+            if path.extension == "json", postInfo == nil {
+                postInfo = try PostInfo.decode(from: path)
+            }
+            if path.extension == "md", markdownPath == nil {
+                markdownPath = path
+            }
+        }
+        if var info = postInfo, let md = markdownPath {
+            info.filePath = md.string
+            return info
+        } else {
+            return nil
+        }
     }
 }
