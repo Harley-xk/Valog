@@ -56,8 +56,10 @@ public func configure(_ app: Application) throws {
         )
     }
     
+    let request = Request(application: app, on: app.eventLoopGroup.next())
+
     // 更新数据库
-    _ = try PostController().reloadPosts(Request(application: app, on: app.eventLoopGroup.next()))
+    _ = try PostController().reloadPosts(request)
 }
 
 struct Config: Codable {
