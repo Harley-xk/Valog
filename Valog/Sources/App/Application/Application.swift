@@ -24,14 +24,6 @@ extension Application {
             withIntermediateDirectories: true,
             attributes: nil
         )
-        
-        // clone posts
-        if !Path(directory.storageDirectory + "Posts").exists {
-            try SimpleShell.runSynchronously(
-                cmd: "git clone https://github.com/Harley-xk/Posts.git",
-                on: directory.storageDirectory
-            )
-        }        
     }
 }
 

@@ -47,6 +47,17 @@ public func configure(_ app: Application) throws {
     
     // Configure routes
     try routes(app)
+    
+    // clone posts if not exists
+    if !Path(app.directory.storageDirectory + "Posts").exists {
+        try SimpleShell.runSynchronously(
+            cmd: "git clone https://github.com/Harley-xk/Posts.git",
+            on: app.directory.storageDirectory
+        )
+    }
+    
+    // 更新数据库
+    _ = try PostController().reloadPosts(Request(application: app, on: app.eventLoopGroup.next()))
 }
 
 struct Config: Codable {
