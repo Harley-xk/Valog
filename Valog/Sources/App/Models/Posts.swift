@@ -62,6 +62,11 @@ final class Post: Model {
         var likes: Int
     }
     
+    struct Details: Content {
+        var meta: Post.Public
+        var content: String
+    }
+    
     func makePublic() -> Public {
         Public(
             id: id,

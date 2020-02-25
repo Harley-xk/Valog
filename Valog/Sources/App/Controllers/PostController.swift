@@ -13,12 +13,33 @@ import CryptoSwift
 final class PostController: RouteCollection {
     
     func boot(routes: RoutesBuilder) throws {
-        routes.get("posts", use: allPosts)
+        routes.get("posts", use: getPosts)
+        routes.get("posts", ":id", use: postDetail)
     }
     
-    func allPosts(_ request: Request) throws -> EventLoopFuture<Page<Post.Public>> {
+    func getPosts(_ request: Request) throws -> EventLoopFuture<Page<Post.Public>> {
         return Post.query(on: request.db).sort(\.$date, .descending).paginate(for: request).map { (page) -> (Page<Post.Public>) in
             page.map { $0.makePublic() }
+        }
+    }
+    
+    func postDetail(_ request: Request) throws -> EventLoopFuture<Post.Details> {
+        guard let id = request.parameters.get("id") else {
+            throw Abort(.badRequest)
+        }
+    
+        return Post.query(on: request.db).filter(\.$id == id).first().mapThrows { (post) -> Post.Details in
+            guard let meta = post else {
+                throw Abort(.notFound)
+            }
+                        
+            let path = Path(meta.filePath)
+            guard path.exists else {
+                return Post.Details(meta: meta.makePublic(), content: "*文章不存在或已删除*")
+            }
+            
+            let content = try String(contentsOf: path.url)
+            return Post.Details(meta: meta.makePublic(), content: content)
         }
     }
     
