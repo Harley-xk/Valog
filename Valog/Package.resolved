@@ -15,8 +15,8 @@
         "repositoryURL": "https://github.com/vapor/async-kit.git",
         "state": {
           "branch": null,
-          "revision": "e67124898436b463af4eec9f98b17aff51f2d9bb",
-          "version": "1.0.0-beta.2.3"
+          "revision": "42edd5d6b52afc0678f85d4a67aa79e0be79fba5",
+          "version": "1.0.0-beta.2.6"
         }
       },
       {
@@ -87,8 +87,8 @@
         "repositoryURL": "https://github.com/vapor/postgres-kit.git",
         "state": {
           "branch": null,
-          "revision": "222dcf753c2018cbd9a0f8977b9e647da4ff5aa8",
-          "version": "2.0.0-beta.3.6"
+          "revision": "3dbd91856cf0e7d42de1c5cfd40cf7bcea682b74",
+          "version": "2.0.0-beta.3.8"
         }
       },
       {
@@ -96,26 +96,8 @@
         "repositoryURL": "https://github.com/vapor/postgres-nio.git",
         "state": {
           "branch": null,
-          "revision": "0206f13dc3d5a4143519f30be0554a083d6da856",
-          "version": "1.0.0-beta.2.8"
-        }
-      },
-      {
-        "package": "redis",
-        "repositoryURL": "https://github.com/vapor/redis",
-        "state": {
-          "branch": null,
-          "revision": "fded401c3df6bfe148535b7206f5c2bd188e5a3a",
-          "version": "4.0.0-beta.3"
-        }
-      },
-      {
-        "package": "redis-kit",
-        "repositoryURL": "https://github.com/vapor/redis-kit.git",
-        "state": {
-          "branch": null,
-          "revision": "7d6bf6f4b8ca9198de0d1c8e959e27514656c101",
-          "version": "1.0.0-beta.3"
+          "revision": "18fec1c24d4741169c6b1ddd4d895c9d87b0f3d3",
+          "version": "1.0.0-beta.2.10"
         }
       },
       {
@@ -132,8 +114,8 @@
         "repositoryURL": "https://github.com/vapor/sql-kit.git",
         "state": {
           "branch": null,
-          "revision": "85077880568b755badc594d5d5cfe3020a5e87c3",
-          "version": "3.0.0-beta.6.5"
+          "revision": "b560d6d2b8a2bdbd9afaedee0acf5fb06ea1bb64",
+          "version": "3.0.0-beta.6.8"
         }
       },
       {
@@ -200,21 +182,12 @@
         }
       },
       {
-        "package": "redi-stack",
-        "repositoryURL": "https://gitlab.com/mordil/swift-redi-stack.git",
-        "state": {
-          "branch": null,
-          "revision": "8d85cb2bfaef91ffb048f1ea6d0c1c6fc04c70e9",
-          "version": "1.0.0-alpha.7.1"
-        }
-      },
-      {
         "package": "vapor",
         "repositoryURL": "https://github.com/vapor/vapor.git",
         "state": {
           "branch": null,
-          "revision": "7bd5d33834bccb1c6e02f38a0c3c45e1dca5ec3f",
-          "version": "4.0.0-beta.3.21"
+          "revision": "6f61074a549b1da62b6d9ff93bf6f3f49306afdc",
+          "version": "4.0.0-beta.3.24"
         }
       },
       {
@@ -224,6 +197,15 @@
           "branch": null,
           "revision": "766b4b0005a158550c345671c8e7cea42af104b6",
           "version": "2.0.0-beta.2.3"
+        }
+      },
+      {
+        "package": "Yams",
+        "repositoryURL": "https://github.com/jpsim/Yams.git",
+        "state": {
+          "branch": null,
+          "revision": "c947a306d2e80ecb2c0859047b35c73b8e1ca27f",
+          "version": "2.0.0"
         }
       }
     ]

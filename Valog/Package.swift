@@ -18,7 +18,9 @@ let package = Package(
         .package(url: "https://github.com/vapor/fluent.git", from: "4.0.0-beta"),
         .package(url: "https://github.com/vapor/fluent-postgres-driver.git", from: "2.0.0-beta"),
         // CryptoSwift
-        .package(url: "https://github.com/krzyzanowskim/CryptoSwift.git", .upToNextMajor(from: "1.0.0"))
+        .package(url: "https://github.com/krzyzanowskim/CryptoSwift.git", .upToNextMajor(from: "1.0.0")),
+        // Yams, Yaml 解析器
+        .package(url: "https://github.com/jpsim/Yams.git", from: "2.0.0"),
     ],
     targets: [
         .target(name: "App",
@@ -27,7 +29,8 @@ let package = Package(
                     "FluentPostgresDriver",
 //                    "Redis",
                     "CryptoSwift",
-                    "Vapor"
+                    "Vapor",
+                    "Yams",
             ]
         ),
         .target(name: "Valog", dependencies: ["App"]),
