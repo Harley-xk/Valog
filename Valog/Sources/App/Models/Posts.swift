@@ -87,6 +87,7 @@ final class Post: Model {
         intro = info.intro
         tags = info.tags
         categories = info.categories
+        filePath = info.filePath
     }
 }
  

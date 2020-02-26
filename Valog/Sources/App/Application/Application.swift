@@ -9,13 +9,29 @@ import Vapor
 
 fileprivate var runningApplication: Application!
 
+fileprivate var _config: Config!
+
 extension Application {
     
     static var running: Application {
         return runningApplication
     }
     
-    func beforeConfigure() throws {
+    func prepareConfigure() throws -> Config {
+        
+        #if Xcode
+        directory = DirectoryConfiguration(
+            workingDirectory: #file.components(separatedBy: "/Sources").first!
+        )
+        #endif
+        
+        let path = Path(directory.workingDirectory + "config-" + environment.name + ".json")
+        _config = try Config.decode(from: path)
+
+        #if Xcode
+        _config.webSite.root = directory.publicDirectory
+        #endif
+        
         runningApplication = self
 
         // create storage directory
@@ -24,6 +40,12 @@ extension Application {
             withIntermediateDirectories: true,
             attributes: nil
         )
+        
+        return _config
+    }
+    
+    var config: Config {
+        return _config
     }
 }
 

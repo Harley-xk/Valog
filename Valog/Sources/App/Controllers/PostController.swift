@@ -32,8 +32,8 @@ final class PostController: RouteCollection {
             guard let meta = post else {
                 throw Abort(.notFound)
             }
-                        
-            let path = Path(meta.filePath)
+            
+            let path = Path(request.application.directory.publicDirectory + "_posts/" + meta.filePath)
             guard path.exists else {
                 return Post.Details(meta: meta.makePublic(), content: "*文章不存在或已删除*")
             }
@@ -44,32 +44,46 @@ final class PostController: RouteCollection {
     }
     
     func reloadPosts(_ request: Request) throws -> EventLoopFuture<[Post.Public]> {
-        let path = Path(request.application.directory.storageDirectory)
+        let path = Path(request.application.directory.storageDirectory + "Posts")
         let results = try self.findPosts(in: path)
-        return results.compactMap { info in
-            return Post.query(on: request.db).filter(\.$date == info.date).first().flatMapThrows { (post) -> EventLoopFuture<Post.Public> in
-                guard let post = post else {
+        try MarkdownFileManager.copyResources(from: path, toPublicOf: request.application)
+        
+        return Post.query(on: request.db).all().flatMapThrows { (posts) -> EventLoopFuture<[Post]> in
+            var exists: [Post] = []
+            /// 删除已经移除的文章
+            return posts.compactMap { post -> EventLoopFuture<Void>? in
+                if results.contains(where: { $0.date == post.date }) {
+                    exists.append(post)
+                    return nil
+                }
+                return post.delete(on: request.db)
+            }.flatten(on: request.eventLoop).transform(to: exists)
+        }.flatMapThrows { (posts) -> EventLoopFuture<[Post.Public]> in
+            return results.compactMap { (info) -> EventLoopFuture<Post.Public> in
+                if let post = posts.first(where: { (p) -> Bool in
+                    return p.date == info.date
+                }) {
+                    post.update(from: info)
+                    return post.update(on: request.db).transform(to: post.makePublic())
+                } else {
                     let model = info.makeModel()
                     return model.create(on: request.db).transform(to: model.makePublic())
                 }
-                post.update(from: info)
-                return post.update(on: request.db).transform(to: post.makePublic())
-            }
-        }.flatten(on: request.eventLoop)
+            }.flatten(on: request.eventLoop)
+        }
     }
     
-    func findPosts(in directory: Path) throws -> [PostInfo] {
-        var posts: [PostInfo] = []
-        for path in try directory.children() {
-            guard path.isDirectory else {
-                continue
-            }
-            if let info = try decodePost(from: path) {
-                posts.append(info)
-            }
-            try posts.append(contentsOf: findPosts(in: path))
+    func findPosts(in directory: Path) throws -> [PostInfo] {        
+        let list = MarkdownFileManager.findFiles(from: directory)
+        return try list.compactMap {
+            try MarkdownFileManager.save(file: $0, toPublicOf: Application.running)
+            return PostInfo(title: $0.frontMatter.title,
+                     date: $0.frontMatter.date,
+                     intro: $0.frontMatter.abstract,
+                     tags: $0.frontMatter.tags,
+                     categories: $0.frontMatter.categories,
+                     filePath: $0.relativePath)
         }
-        return posts
     }
     
     func decodePost(from directory: Path) throws -> PostInfo? {

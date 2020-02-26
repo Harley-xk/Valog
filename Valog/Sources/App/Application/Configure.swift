@@ -8,11 +8,8 @@ import FluentPostgresDriver
 public func configure(_ app: Application) throws {
     
     // initialize
-    try app.beforeConfigure()
+    let config = try app.prepareConfigure()
     
-    let path = Path(app.directory.workingDirectory + "config-" + app.environment.name + ".json")
-    let config = try Config.decode(from: path)
-
     app.server.configuration.hostname = config.server.host
     app.server.configuration.port = config.server.port
 
@@ -23,7 +20,7 @@ public func configure(_ app: Application) throws {
 //    )
     
     // Serves files from `Public/` directory
-    app.middleware.use(FileMiddleware(publicDirectory: app.directory.publicDirectory))
+//    app.middleware.use(FileMiddleware(publicDirectory: app.directory.publicDirectory))
     
     app.databases.use(.postgres(
         hostname: config.database.host,
@@ -83,7 +80,12 @@ struct Config: Codable {
         var password: String?
     }
     
+    struct WebSite: Codable {
+        var root: String
+    }
+    
     var server: Server
     var database: Database
     var redis: Redis
+    var webSite: WebSite
 }

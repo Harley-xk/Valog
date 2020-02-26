@@ -12,5 +12,8 @@
   "redis": {
     "host": "localhost",
     "port": 6379
+  },
+  "webSite": {
+      "root": "/var/www/"
   }
 }
