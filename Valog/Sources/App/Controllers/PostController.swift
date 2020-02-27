@@ -27,19 +27,24 @@ final class PostController: RouteCollection {
         guard let id = request.parameters.get("id") else {
             throw Abort(.badRequest)
         }
-    
-        return Post.query(on: request.db).filter(\.$id == id).first().mapThrows { (post) -> Post.Details in
+        
+        return Post.query(on: request.db).filter(\.$id == id).first().flatMapThrows { (post) -> EventLoopFuture<Post.Details> in
             guard let meta = post else {
                 throw Abort(.notFound)
             }
             
             let path = Path(request.application.directory.publicDirectory + "_posts/" + meta.filePath)
             guard path.exists else {
-                return Post.Details(meta: meta.makePublic(), content: "*文章不存在或已删除*")
+                return request.eventLoop.future(
+                    Post.Details(meta: meta.makePublic(), content: "*文章不存在或已删除*")
+                )
             }
             
             let content = try String(contentsOf: path.url)
-            return Post.Details(meta: meta.makePublic(), content: content)
+            meta.views += 1
+            return meta.update(on: request.db).transform(
+                    to: Post.Details(meta: meta.makePublic(), content: content)
+            )
         }
     }
     
@@ -78,11 +83,11 @@ final class PostController: RouteCollection {
         return try list.compactMap {
             try MarkdownFileManager.save(file: $0, toPublicOf: Application.running)
             return PostInfo(title: $0.frontMatter.title,
-                     date: $0.frontMatter.date,
-                     intro: $0.frontMatter.abstract,
-                     tags: $0.frontMatter.tags,
-                     categories: $0.frontMatter.categories,
-                     filePath: $0.relativePath)
+                            date: $0.frontMatter.date,
+                            intro: $0.frontMatter.abstract,
+                            tags: $0.frontMatter.tags,
+                            categories: $0.frontMatter.categories,
+                            filePath: $0.relativePath)
         }
     }
     
