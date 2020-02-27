@@ -7,6 +7,9 @@
 
 import Foundation
 import Vapor
+import CryptoSwift
+
+let webhook_token = "101118"
 
 class WebhooksController: RouteCollection {
     
@@ -16,33 +19,49 @@ class WebhooksController: RouteCollection {
     
     func pushAction(_ request: Request) throws -> EventLoopFuture<HTTPStatus> {
         
-        let action = try request.content.decode(PushAction.self)
-        
-//        print("== Headers ==")
-//        request.headers.forEach { (name, value) in
-//            print("\(name) : \(value)")
-//        }
-//        print("== Body ==")
-//        print(request.body.string ?? "<empty body>")
-        
-        // 校验是否是合法的钩子
-        guard action.repository.full_name == "Harley-xk/Posts",
-            action.pusher.name == "Harley-xk",
-            action.ref == "refs/heads/master"
+        /// 验证签名
+        guard let payload = request.body.string?.bytes,
+            let hub_sign = request.headers.first(name: "X-Hub-Signature")
             else {
-                // 抛出 404 错误，假装没有这个接口
-                throw Abort(.notFound)
+                throw Abort(.badRequest)
         }
         
+        let sign = try CryptoSwift.HMAC(key: webhook_token.bytes, variant: .sha1)
+            .authenticate(payload)
+        guard "sha1=\(sign)" == hub_sign else {
+            throw Abort(.badRequest, reason: "Signature not match!")
+        }
+
+        let action = try request.content.decode(PushAction.self)
+        
+        // 校验是否是合法的钩子
+        if action.repository.full_name == "Harley-xk/Posts",
+            action.pusher.name == "Harley-xk",
+            action.ref == "refs/heads/master" {
+            return try updatePostsAndReload(from: request).transform(to: HTTPStatus.ok)
+        } else if action.repository.full_name == "Harley-xk/nuxt-pages" {
+            try updateNuxtSitesAndDepoly(from: request)
+            return request.eventLoop.future(.ok)
+        } else {
+            // 抛出 404 错误，假装没有这个接口
+            throw Abort(.badRequest, reason: "Unsupported action!")
+        }
+    }
+    
+    private func updatePostsAndReload(from request: Request) throws -> EventLoopFuture<[Post.Public]> {
         try SimpleShell.runSynchronously(
             //            cmd: "git clone https://github.com/Harley-xk/MySite.git --branch=gh-pages",
             cmd: "git pull",
             on: request.application.directory.workingDirectory + "Storage/Posts"
         )
-        
-        return try PostController().reloadPosts(request).transform(to: HTTPStatus.ok)
+        return try PostController().reloadPosts(request)
     }
     
+    private func updateNuxtSitesAndDepoly(from request: Request) throws {
+        let websitePath = "/var/www"
+        try SimpleShell.runSynchronously(cmd: "git pull",on: websitePath)
+        try SimpleShell.runSynchronously(cmd: "npm run generate",on: websitePath)
+    }
 }
 
 struct PushAction: Content {
