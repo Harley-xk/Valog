@@ -22,7 +22,7 @@ class MarkdownFileManager {
         do {
             children = try directory.children()
         } catch {
-            Logger(label: "MarkdownFileManager").error("No contents find: \(error)")
+            Logger.timed(label: "MarkdownFileManager").error("No contents find: \(error)")
             return []
         }
         
@@ -35,7 +35,7 @@ class MarkdownFileManager {
                     let file = try MarkdownFile(path: path.url)
                     files.append(file)
                 } catch {
-                    Logger(label: "MarkdownFileManager").error("Parse markdown failed: \(error)")
+                    Logger.timed(label: "MarkdownFileManager").error("Parse markdown failed: \(error)")
                 }
             }
         }

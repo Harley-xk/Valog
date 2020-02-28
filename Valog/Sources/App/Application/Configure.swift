@@ -13,6 +13,10 @@ public func configure(_ app: Application) throws {
     app.server.configuration.hostname = config.server.host
     app.server.configuration.port = config.server.port
 
+    app.logger = Logger(label: "Valog Timing Logger") { (_) -> LogHandler in
+        return PritingTimingLogger()
+    }
+    
 //    app.redis.configuration = RedisKit.RedisConfiguration(
 //        hostname: config.redis.host,
 //        port: config.redis.port,

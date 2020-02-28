@@ -18,17 +18,19 @@ class WebhooksController: RouteCollection {
     func pushAction(_ request: Request) throws -> EventLoopFuture<HTTPStatus> {
         
         /// 验证签名
-        try verifySignature(from: request)
+//        try verifySignature(from: request)
 
         let action = try request.content.decode(PushAction.self)
         
         // 校验是否是合法的钩子
-        if action.repository.full_name == "Harley-xk/Posts",
+        if action.repository.full_name == "Harley-xk/Posts" {
 //            action.ref == "refs/heads/master",
-            action.sender.name == "Harley-xk" {
+//            action.sender.name == "Harley-xk" {
             return try updatePostsAndReload(from: request).transform(to: HTTPStatus.ok)
         } else if action.repository.full_name == "Harley-xk/nuxt-pages" {
             try updateNuxtSitesAndDepoly(from: request)
+            let path = Path(request.application.directory.storageDirectory + "Posts")
+            try MarkdownFileManager.copyResources(from: path, toPublicOf: request.application)
             return request.eventLoop.future(.ok)
         } else {
             // 抛出 404 错误，假装没有这个接口
@@ -38,24 +40,23 @@ class WebhooksController: RouteCollection {
     
     private func verifySignature(from request: Request) throws {
         
-//        let webhook_token = request.application.config.hook.token
+        let webhook_token = request.application.config.hook.token
         
-//        guard let payload = request.body.string?.bytes,
-//            let hub_sign = request.headers.first(name: "X-Hub-Signature")
-//            else {
-//                throw Abort(.badRequest)
-//        }
-//        
-//        let sign = try CryptoSwift.HMAC(key: webhook_token.bytes, variant: .sha1)
-//            .authenticate(payload).toHexString()
-//        guard "sha1=\(sign)" == hub_sign else {
-//            throw Abort(.badRequest, reason: "Signature not match!")
-//        }
+        guard let payload = request.body.string?.bytes,
+            let hub_sign = request.headers.first(name: "X-Hub-Signature")
+            else {
+                throw Abort(.badRequest)
+        }
+        
+        let sign = try CryptoSwift.HMAC(key: webhook_token.bytes, variant: .sha1)
+            .authenticate(payload).toHexString()
+        guard "sha1=\(sign)" == hub_sign else {
+            throw Abort(.badRequest, reason: "Signature not match!")
+        }
     }
     
     private func updatePostsAndReload(from request: Request) throws -> EventLoopFuture<[Post.Public]> {
         try SimpleShell.runSynchronously(
-            //            cmd: "git clone https://github.com/Harley-xk/MySite.git --branch=gh-pages",
             cmd: "git pull",
             on: request.application.directory.workingDirectory + "Storage/Posts"
         )
@@ -63,9 +64,10 @@ class WebhooksController: RouteCollection {
     }
     
     private func updateNuxtSitesAndDepoly(from request: Request) throws {
-        let websitePath = request.application.config.webSite.projectPath
-        try SimpleShell.runSynchronously(cmd: "git pull", on: websitePath)
-        try SimpleShell.runSynchronously(cmd: "npm run generate", on: websitePath)
+        let filename = "update-website-\(request.application.environment.name).sh"
+        let scriptPath: String = request.application.directory.workingDirectory + filename
+        Logger.timed(label: "Webhook").info("Running script: \(scriptPath)")
+        try SimpleShell.run(cmd: "bash \(scriptPath)")
     }
 }
 

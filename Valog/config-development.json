@@ -16,7 +16,7 @@
   "webSite": {
       "root": "/Users/Harley-xk/Works/博客/Vapor/Valog/Public",
       "projectPath": "/Users/Harley-xk/Works/博客/nuxt-pages"
-  }
+  },
   "hook": {
       "token": "abcdefg"
   }
