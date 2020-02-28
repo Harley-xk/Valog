@@ -23,9 +23,9 @@ final class SimpleShell {
     }
     
     @discardableResult
-    static func runSynchronously(cmd: String, on directory: String? = nil) throws -> Process {
+    static func runSynchronously(cmd: String, on directory: String? = nil, executableURL: URL? = nil) throws -> Process {
         let ls = Process()
-        ls.executableURL = URL(fileURLWithPath: "/usr/bin/env")
+        ls.executableURL = executableURL ?? URL(fileURLWithPath: "/usr/bin/env")
         if let path = directory {
             ls.currentDirectoryURL = URL(fileURLWithPath: path)
         }

@@ -82,10 +82,16 @@ struct Config: Codable {
     
     struct WebSite: Codable {
         var root: String
+        var projectPath: String
+    }
+    
+    struct Webhook: Codable {
+        var token: String
     }
     
     var server: Server
     var database: Database
     var redis: Redis
     var webSite: WebSite
+    var hook: Webhook
 }
