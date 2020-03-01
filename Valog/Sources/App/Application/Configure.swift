@@ -17,6 +17,13 @@ public func configure(_ app: Application) throws {
         return PritingTimingLogger()
     }
     
+    app.logger.trace("测试日志输出")
+    app.logger.debug("测试日志输出")
+    app.logger.info("测试日志输出")
+    app.logger.notice("测试日志输出")
+    app.logger.warning("测试日志输出")
+    app.logger.error("测试日志输出")
+
 //    app.redis.configuration = RedisKit.RedisConfiguration(
 //        hostname: config.redis.host,
 //        port: config.redis.port,

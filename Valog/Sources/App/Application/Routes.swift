@@ -16,6 +16,9 @@ func routes(_ app: Application) throws {
     let api = app.grouped("api")
     try api.register(collection: PostController())
     try api.register(collection: WebhooksController())
+
+    let admin = api.grouped("admin")
+    try admin.register(collection: AdminController())
     
     api.get("test") { _ in
         return "Foo: Bar"
