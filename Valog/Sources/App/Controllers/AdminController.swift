@@ -16,7 +16,7 @@ struct LogContent: Content {
     
     var type = LogType.application
     var content: String
-    var time: Date = Date()
+    var time: String = Date().string()
 }
 
 final class AdminController: RouteCollection {
@@ -25,13 +25,12 @@ final class AdminController: RouteCollection {
         routes.get("logs", use: getAppLogs)
     }
     
-    func getAppLogs(_ request: Request) throws -> String {
+    func getAppLogs(_ request: Request) throws -> LogContent {
         var path = Path("/var/log/supervisor/valog.log")
         #if Xcode
         path = Path(request.application.directory.storageDirectory + "/log/valog.log")
         #endif
         let content = try String(contentsOf: path.url)
-        return content
-//        return LogContent(content: content)
+        return LogContent(content: content)
     }
 }

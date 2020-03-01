@@ -19,9 +19,9 @@ extension Logger {
 final class PritingTimingLogger: LogHandler {
     func log(level: Logger.Level, message: Logger.Message, metadata: Logger.Metadata?, file: String, function: String, line: UInt) {
         let sep: String = "|".colored(hex: "CECECE")
-        var content = "\(sep)\(Date().string().colored(hex: "3AC0B1"))"
-        content += sep + level.coloredName
-        content += sep + message.description.colored(hex: "537A94")
+        var content = "\(sep) \(Date().string().colored(hex: "3AC0B1")) "
+        content += "\(sep) \(level.coloredName) "
+        content += "\(sep) \(message.description.colored(hex: "537A94"))"
         print(content)        
     }
     
@@ -44,25 +44,25 @@ extension Logger.Level {
     var coloredName: String {
         switch self {
         /// Appropriate for messages that contain information only when debugging a program.
-        case .trace: return "TRACE".colored(hex: "947839")
+        case .trace: return "追踪".colored(hex: "947839")
             
         /// Appropriate for messages that contain information normally of use only when
         /// debugging a program.
-        case .debug: return "DEBUG".colored(hex: "947839")
+        case .debug: return "调试".colored(hex: "947839")
             
         /// Appropriate for informational messages.
-        case .info: return "INFO".colored(hex: "1C941E")
+        case .info: return "日志".colored(hex: "1C941E")
             
         /// Appropriate for conditions that are not error conditions, but that may require
         /// special handling.
-        case .notice: return "NOTE".colored(hex: "8D9439")
+        case .notice: return "注意".colored(hex: "8D9439")
             
         /// Appropriate for messages that are not error conditions, but more severe than
         /// `.notice`.
-        case .warning: return "WARN".colored(hex: "C66600")
+        case .warning: return "警告".colored(hex: "C66600")
             
         /// Appropriate for error conditions.
-        case .error: return "ERROE".colored(hex: "C62100")
+        case .error: return "错误".colored(hex: "C62100")
             
         /// Appropriate for critical error conditions that usually require immediate
         /// attention.
