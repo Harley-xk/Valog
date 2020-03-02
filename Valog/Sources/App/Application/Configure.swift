@@ -13,16 +13,12 @@ public func configure(_ app: Application) throws {
     app.server.configuration.hostname = config.server.host
     app.server.configuration.port = config.server.port
 
-    app.logger = Logger(label: "Valog Timing Logger") { (_) -> LogHandler in
-        return PritingTimingLogger()
-    }
-    
-    app.logger.trace("测试日志输出")
-    app.logger.debug("测试日志输出")
-    app.logger.info("测试日志输出")
-    app.logger.notice("测试日志输出")
-    app.logger.warning("测试日志输出")
-    app.logger.error("测试日志输出")
+//    app.logger.trace("测试日志输出")
+//    app.logger.debug("测试日志输出")
+//    app.logger.info("测试日志输出")
+//    app.logger.notice("测试日志输出")
+//    app.logger.warning("测试日志输出")
+//    app.logger.error("测试日志输出")
 
 //    app.redis.configuration = RedisKit.RedisConfiguration(
 //        hostname: config.redis.host,

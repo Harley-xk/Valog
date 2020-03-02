@@ -13,7 +13,7 @@ fileprivate var _config: Config!
 
 extension Application {
     
-    static var running: Application {
+    static var shared: Application {
         return runningApplication
     }
     

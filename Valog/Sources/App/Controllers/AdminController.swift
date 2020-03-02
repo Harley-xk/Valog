@@ -32,8 +32,7 @@ final class AdminController: RouteCollection {
         #endif
         var encoding: String.Encoding = .utf8
         let content = try String(contentsOf: path.url, usedEncoding: &encoding)
-        Logger.timed(label: "Reading Log Files")
-            .info("Read log file from: \(path.string), used encoding: \(encoding.description)")
+        request.logger.info("Read log file from: \(path.string), used encoding: \(encoding.description)")
         return LogContent(content: content)
     }
 }

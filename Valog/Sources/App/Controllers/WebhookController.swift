@@ -66,7 +66,7 @@ class WebhooksController: RouteCollection {
     private func updateNuxtSitesAndDepoly(from request: Request) throws {
         let filename = "update-website-\(request.application.environment.name).sh"
         let scriptPath: String = request.application.directory.workingDirectory + filename
-        Logger.timed(label: "Webhook").info("Running script: \(scriptPath)")
+        request.logger.info("Running script: \(scriptPath)")
         try SimpleShell.run(cmd: "bash \(scriptPath)")
     }
 }

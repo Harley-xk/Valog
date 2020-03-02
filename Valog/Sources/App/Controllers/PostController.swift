@@ -81,7 +81,7 @@ final class PostController: RouteCollection {
     func findPosts(in directory: Path) throws -> [PostInfo] {        
         let list = MarkdownFileManager.findFiles(from: directory)
         return try list.compactMap {
-            try MarkdownFileManager.save(file: $0, toPublicOf: Application.running)
+            try MarkdownFileManager.save(file: $0, toPublicOf: Application.shared)
             return PostInfo(title: $0.frontMatter.title,
                             date: $0.frontMatter.date,
                             intro: $0.frontMatter.abstract,

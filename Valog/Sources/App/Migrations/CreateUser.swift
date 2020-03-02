@@ -37,7 +37,7 @@ struct CreateMaster: Migration {
         master.contact?.wechat = "wx_8772836"
         master.roles = User.Role.allCases
         return master.create(on: database).map { _ in
-            Logger.timed(label: "Valog").info(
+            database.logger.info(
                 """
                 ==> master created
                 -----------> username: \(master.username)
