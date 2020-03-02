@@ -41,7 +41,7 @@ extension Process {
         switch terminationReason {
         case .exit: return "exit with code: \(terminationStatus)"
         case .uncaughtSignal: return "exit with uncaughtSignal: \(terminationStatus)"
-        @unknown default: return "exit with unknown status: \(terminationStatus)"
+        default: return "exit with unknown status: \(terminationStatus)"
         }
     }
 }

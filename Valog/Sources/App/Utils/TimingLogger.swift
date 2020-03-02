@@ -18,10 +18,12 @@ extension Logger {
 
 final class PritingTimingLogger: LogHandler {
     func log(level: Logger.Level, message: Logger.Message, metadata: Logger.Metadata?, file: String, function: String, line: UInt) {
-        let sep: String = "|".colored(hex: "CECECE")
-        var content = "\(sep) \(Date().string().colored(hex: "3AC0B1")) "
-        content += "\(sep) \(level.coloredName) "
-        content += "\(sep) \(message.description.colored(hex: "537A94"))"
+        let sep_l: String = "[".colored(hex: "CECECE")
+        let sep_r: String = "]".colored(hex: "CECECE")
+        let date = Date().string().colored(hex: "3AC0B1")
+        var content = "\(sep_l)\(date)\(sep_r)"
+        content += "\(sep_l)\(level.coloredName)\(sep_r)"
+        content += " \(message.description.colored(hex: "444444"))"
         print(content)        
     }
     

@@ -30,7 +30,10 @@ final class AdminController: RouteCollection {
         #if Xcode
         path = Path(request.application.directory.storageDirectory + "/log/valog.log")
         #endif
-        let content = try String(contentsOf: path.url)
+        var encoding: String.Encoding = .utf8
+        let content = try String(contentsOf: path.url, usedEncoding: &encoding)
+        Logger.timed(label: "Reading Log Files")
+            .info("Read log file from: \(path.string), used encoding: \(encoding.description)")
         return LogContent(content: content)
     }
 }
