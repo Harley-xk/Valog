@@ -18,7 +18,16 @@ final class PostController: RouteCollection {
     }
     
     func getPosts(_ request: Request) throws -> EventLoopFuture<Page<Post.Public>> {
-        return Post.query(on: request.db).sort(\.$date, .descending).paginate(for: request).map { (page) -> (Page<Post.Public>) in
+        
+        var query = Post.query(on: request.db)
+        if let key = try? request.query.get(String.self, at: "key") {
+            query = query.group(.or, { (builder) in
+                builder.filter(.custom("lower(title) like '%\(key.lowercased())%'"))
+                builder.filter(.custom("lower(intro) like '%\(key.lowercased())%'"))
+            })
+        }
+        
+        return query.sort(\.$date, .descending).paginate(for: request).map { (page) -> (Page<Post.Public>) in
             page.map { $0.makePublic() }
         }
     }
