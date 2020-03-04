@@ -29,8 +29,6 @@ class WebhooksController: RouteCollection {
             return try updatePostsAndReload(from: request).transform(to: HTTPStatus.ok)
         } else if action.repository.full_name == "Harley-xk/nuxt-pages" {
             try updateNuxtSitesAndDepoly(from: request)
-            let path = Path(request.application.directory.storageDirectory + "Posts")
-            try MarkdownFileManager.copyResources(from: path, toPublicOf: request.application)
             return request.eventLoop.future(.ok)
         } else {
             // 抛出 404 错误，假装没有这个接口
@@ -67,7 +65,15 @@ class WebhooksController: RouteCollection {
         let filename = "update-website-\(request.application.environment.name).sh"
         let scriptPath: String = request.application.directory.workingDirectory + filename
         request.logger.info("Running script: \(scriptPath)")
-        try SimpleShell.run(cmd: "bash \(scriptPath)")
+        try SimpleShell.run(cmd: "bash \(scriptPath)") { _ in
+            /// 网站生成完毕后尝试重新拷贝公共资源到网站根目录
+            let path = Path(request.application.directory.storageDirectory + "Posts")
+            do {
+                try MarkdownFileManager.copyResources(from: path, toPublicOf: request.application)
+            } catch {
+                request.application.logger.error("\(error.localizedDescription)")
+            }
+        }
     }
 }
 
