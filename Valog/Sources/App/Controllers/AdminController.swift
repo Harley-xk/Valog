@@ -19,10 +19,20 @@ struct LogContent: Content {
     var time: String = Date().string()
 }
 
+class AdminGuradMiddleware: Middleware {
+    func respond(to request: Request, chainingTo next: Responder) -> EventLoopFuture<Response> {
+        guard let user = try? request.auth.require(User.self), user.roles.contains(.admin) else {
+            return request.eventLoop.future(Response(status: .forbidden))
+        }
+        return next.respond(to: request)
+    }
+}
+
 final class AdminController: RouteCollection {
     
     func boot(routes: RoutesBuilder) throws {
-        routes.get("logs", use: getAppLogs)
+        routes.grouped([Token.authenticator().middleware(), AdminGuradMiddleware()])
+            .get("logs", use: getAppLogs)
     }
     
     func getAppLogs(_ request: Request) throws -> LogContent {
