@@ -97,16 +97,7 @@ public struct ColoredLogger: LogHandler {
 extension LoggingSystem {
    
     public static func bootstrapColoredLogger(from environment: inout Environment) throws {
-        struct LogSignature: CommandSignature {
-            @Option(name: "log", help: "Change log level")
-            var level: Logger.Level?
-            init() { }
-        }
-        
-        let level = try LogSignature(from: &environment.commandInput).level
-            ?? Environment.process.LOG_LEVEL
-            ?? (environment == .production ? .notice : .info)
-        
+        let level: Logger.Level = environment == .production ? .info : .debug
         self.bootstrap { label in
             return ColoredLogger(label: label, console: Terminal(), level: level, metadata: [:])
         }
