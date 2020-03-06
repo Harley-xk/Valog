@@ -13,13 +13,6 @@ public func configure(_ app: Application) throws {
     app.server.configuration.hostname = config.server.host
     app.server.configuration.port = config.server.port
 
-//    app.logger.trace("测试日志输出")
-//    app.logger.debug("测试日志输出")
-//    app.logger.info("测试日志输出")
-//    app.logger.notice("测试日志输出")
-//    app.logger.warning("测试日志输出")
-//    app.logger.error("测试日志输出")
-
 //    app.redis.configuration = RedisKit.RedisConfiguration(
 //        hostname: config.redis.host,
 //        port: config.redis.port,
@@ -51,6 +44,14 @@ public func configure(_ app: Application) throws {
     
     // Configure routes
     try routes(app)
+    
+    // 设置时间 JSON 格式
+    let encoder = JSONEncoder()
+    let decoder = JSONDecoder()
+    encoder.dateEncodingStrategy = .secondsSince1970
+    decoder.dateDecodingStrategy = .secondsSince1970
+    ContentConfiguration.global.use(decoder: decoder, for: .json)
+    ContentConfiguration.global.use(encoder: encoder, for: .json)
     
     // clone posts if not exists
     if !Path(app.directory.storageDirectory + "Posts").exists {

@@ -88,6 +88,14 @@ final class User: ModelUser {
     func verify(password: String) throws -> Bool {
         return try Bcrypt.verify(password, created: self.password)
     }
+    
+    func generateToken() throws -> Token {
+        try Token(userId: self.requireID())
+    }
+    
+    func makePublic() -> Public {
+        return Public(from: self)
+    }
 }
 
 extension User: ResponseEncodable {

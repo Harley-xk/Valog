@@ -14,6 +14,7 @@ func routes(_ app: Application) throws {
     }
     
     let api = app.grouped("api")
+    try api.register(collection: UserController())
     try api.register(collection: PostController())
     try api.register(collection: WebhooksController())
 
