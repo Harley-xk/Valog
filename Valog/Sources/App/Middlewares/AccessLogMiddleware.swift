@@ -43,7 +43,8 @@ extension Request {
             let random = { return Int.random(in: 1 ... 100) }
             return "\(random()).\(random()).\(random()).\(random())"
         } else {
-            return remoteAddress?.ipAddress
+            // 服务器通过 Caddy 转发，实际 IP 在这个字段（需要在 caddy 配置文件指定）
+            return headers.first(name: "X-Real-Ip") ?? "Unknown"
         }
     }
 }
