@@ -13,7 +13,7 @@ func routes(_ app: Application) throws {
         return "Hello, world!"
     }
     
-    let api = app.grouped("api")
+    let api = app.grouped("api").grouped(AccessLogMiddleware())
     try api.register(collection: UserController())
     try api.register(collection: PostController())
     try api.register(collection: WebhooksController())
