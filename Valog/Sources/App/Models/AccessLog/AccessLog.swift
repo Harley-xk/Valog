@@ -46,10 +46,15 @@ final class AccessLog: Model {
         ip = req.remoteIP ?? "Unknown"
         page = req.url.description
         request = req.description
-        do {
-            response = try res.get().description
-        } catch {
-            response = error.localizedDescription
+        /// 获取日志的接口不记录返回的日志信息，否则会造成无限嵌套
+        if !page.contains("api/admin/logs") {
+            do {
+                response = try res.get().description
+            } catch {
+                response = error.localizedDescription
+            }
+        } else {
+            response = "<Object>"
         }
     }
 }
