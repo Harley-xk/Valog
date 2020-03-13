@@ -17,6 +17,8 @@ public func prepareMigrations(_ app: Application) throws {
     app.migrations.add(CreateToken())
     app.migrations.add(CreateAccessLog())
     
+    app.migrations.add(Post_Add_Sections())
+    
     try app.autoMigrate().wait()
 }
 

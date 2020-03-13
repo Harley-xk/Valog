@@ -85,4 +85,22 @@ class MarkdownFileManager {
         }
     }
     
+    
+    static func parseSection(from line: String) -> MarkdownSection? {
+        guard let prefix = line.components(separatedBy: " ").first else {
+            return nil
+        }
+        var level = 0
+        switch prefix {
+        case "#": level = 1
+        case "##": level = 2
+        case "###": level = 3
+        case "####": level = 4
+        case "#####": level = 5
+        case "######": level = 6
+        default: return nil
+        }
+        let title = line.replacingOccurrences(of: prefix + " ", with: "")
+        return MarkdownSection(title: title, level: level)
+    }
 }

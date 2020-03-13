@@ -48,6 +48,9 @@ final class Post: Model {
     @Field(key: "file-path")
     var filePath: String
     
+    @Field(key: "sections")
+    var sections: [Section]
+    
     required init() {}
     
     struct Public: Content {
@@ -57,6 +60,7 @@ final class Post: Model {
         var intro: String?
         var tags: [String]?
         var categories: [String]?
+        var sections: [Section]
         var views: Int
         var comments: Int
         var likes: Int
@@ -67,6 +71,12 @@ final class Post: Model {
         var content: String
     }
     
+    struct Section: Content {
+        var title: String
+        var level: Int
+        var children: [Section]?
+    }
+    
     func makePublic() -> Public {
         Public(
             id: id,
@@ -75,56 +85,20 @@ final class Post: Model {
             intro: intro,
             tags: tags,
             categories: categories,
+            sections: sections,
             views: views,
             comments: comments,
             likes: likes
         )
     }
     
-    func update(from info: PostInfo) {
-        title = info.title
-        date = info.date
-        intro = info.intro
-        tags = info.tags
-        categories = info.categories
-        filePath = info.filePath
-    }
-}
- 
-struct PostInfo: Codable {
-
-    var title: String
-    
-    var date: String
-    
-    var intro: String?
-    
-    var tags: [String]?
-    
-    var categories: [String]?
-    
-    var filePath: String!
-    
-    func makeModel() -> Post {
-        let p = Post()
-        p.id = date.removingOccurrences(["-", ":", " "])
-        p.title = title
-        p.date = date
-        p.intro = intro
-        p.tags = tags
-        p.categories = categories
-        p.filePath = filePath
-        p.views = 0
-        p.comments = 0
-        p.likes = 0
-        return p
-    }
-}
-
-fileprivate extension String {
-    func removingOccurrences(_ list: [String]) -> String {
-        return list.reduce(self) { (result, s) -> String in
-            return result.replacingOccurrences(of: s, with: "")
-        }
+    func update(from info: MarkdownFile) {
+        title = info.frontMatter.title
+        date = info.frontMatter.date
+        intro = info.frontMatter.abstract
+        tags = info.frontMatter.tags
+        categories = info.frontMatter.categories
+        sections = info.sections
+        filePath = info.relativePath
     }
 }

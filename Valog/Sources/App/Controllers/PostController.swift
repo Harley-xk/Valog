@@ -66,7 +66,7 @@ final class PostController: RouteCollection {
             var exists: [Post] = []
             /// 删除已经移除的文章
             return posts.compactMap { post -> EventLoopFuture<Void>? in
-                if results.contains(where: { $0.date == post.date }) {
+                if results.contains(where: { $0.frontMatter.date == post.date }) {
                     exists.append(post)
                     return nil
                 }
@@ -75,7 +75,7 @@ final class PostController: RouteCollection {
         }.flatMapThrows { (posts) -> EventLoopFuture<[Post.Public]> in
             return results.compactMap { (info) -> EventLoopFuture<Post.Public> in
                 if let post = posts.first(where: { (p) -> Bool in
-                    return p.date == info.date
+                    return p.date == info.frontMatter.date
                 }) {
                     post.update(from: info)
                     return post.update(on: request.db).transform(to: post.makePublic())
@@ -92,33 +92,7 @@ final class PostController: RouteCollection {
         let list = MarkdownFileManager.findFiles(from: folder)
         try list.forEach {
             try MarkdownFileManager.save(file: $0, toPublicOf: Application.shared)
-            return PostInfo(title: $0.frontMatter.title,
-                            date: $0.frontMatter.date,
-                            intro: $0.frontMatter.abstract,
-                            tags: $0.frontMatter.tags,
-                            categories: $0.frontMatter.categories,
-                            filePath: $0.relativePath)
         }
-    }
-    
-    func decodePost(from directory: Path) throws -> PostInfo? {
-        
-        var postInfo: PostInfo?
-        var markdownPath: Path?
-        
-        for path in try directory.children() {
-            if path.extension == "json", postInfo == nil {
-                postInfo = try PostInfo.decode(from: path)
-            }
-            if path.extension == "md", markdownPath == nil {
-                markdownPath = path
-            }
-        }
-        if var info = postInfo, let md = markdownPath {
-            info.filePath = md.string
-            return info
-        } else {
-            return nil
-        }
+        return list
     }
 }
