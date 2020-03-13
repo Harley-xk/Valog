@@ -9,7 +9,7 @@
 git stash
 git pull
 
-vapor fetch
+vapor fetch --verbose
 vapor build --verbose
 
 supervisorctl restart Valog
