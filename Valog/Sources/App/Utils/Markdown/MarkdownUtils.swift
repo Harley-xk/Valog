@@ -8,9 +8,29 @@
 import Foundation
 import Vapor
 
-enum MarkdownParseError: Error {
-    case noContents
-    case noFrontMatter
+struct MarkdownParseError: Error, CustomStringConvertible {
+    
+    enum Error: String {
+        case noContents
+        case noFrontMatter
+    }
+
+    var filename: String
+    var error: Error
+    
+    init(_ error: Error, in file: String) {
+        self.error = error
+        self.filename = file
+    }
+    
+    init(_ error: Error, in file: URL) {
+        self.error = error
+        self.filename = file.relativePath
+    }
+    
+    var description: String {
+        return "解析 Markdown 出错，文件：\(filename)，错误：\(error.rawValue)"
+    }
 }
 
 class MarkdownFileManager {

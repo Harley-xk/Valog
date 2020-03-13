@@ -37,10 +37,10 @@ struct MarkdownFile {
         let string = try String(contentsOf: path).trimmingCharacters(in: .whitespacesAndNewlines)
         var lines = string.components(separatedBy: .newlines)
         guard lines.count > 0 else {
-            throw MarkdownParseError.noContents
+            throw MarkdownParseError(.noContents, in: path)
         }
         guard lines.first!.hasPrefix("---") else {
-            throw MarkdownParseError.noFrontMatter
+            throw MarkdownParseError(.noFrontMatter, in: path)
         }
 
         var yamlContent = ""
@@ -56,9 +56,9 @@ struct MarkdownFile {
             yamlContent.append(line)
             yamlContent.append("\n")
         }
-
-        guard endTagFound else {
-            throw MarkdownParseError.noFrontMatter
+        
+        guard yamlContent.count > 0 else {
+            throw MarkdownParseError(.noFrontMatter, in: path)
         }
 
         frontMatter = try YAMLDecoder().decode(from: yamlContent)
