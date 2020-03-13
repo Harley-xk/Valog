@@ -30,6 +30,9 @@ class WebhooksController: RouteCollection {
         } else if action.repository.full_name == "Harley-xk/nuxt-pages" {
             try updateNuxtSitesAndDepoly(from: request)
             return request.eventLoop.future(.ok)
+        } else if action.repository.full_name == "Harley-xk/Valog" {
+            try rebuildServerAndDepoly(from: request)
+            return request.eventLoop.future(.ok)
         } else {
             // 抛出 404 错误，假装没有这个接口
             throw Abort(.badRequest, reason: "Unsupported action!")
@@ -65,7 +68,7 @@ class WebhooksController: RouteCollection {
         let filename = "update-website-\(request.application.environment.name).sh"
         let scriptPath: String = request.application.directory.workingDirectory + filename
         request.logger.info("Running script: \(scriptPath)")
-        try SimpleShell.run(cmd: "bash \(scriptPath)") { _ in
+        try SimpleShell.run(cmd: "zsh \(scriptPath)") { _ in
             /// 网站生成完毕后尝试重新拷贝公共资源到网站根目录
             let path = Path(request.application.directory.storageDirectory + "Posts")
             do {
@@ -74,6 +77,12 @@ class WebhooksController: RouteCollection {
                 request.application.logger.error("\(error.localizedDescription)")
             }
         }
+    }
+    
+    private func rebuildServerAndDepoly(from request: Request) throws {
+        let scriptPath: String = request.application.directory.workingDirectory + "redepoly.sh"
+        request.logger.info("Running script: \(scriptPath)")
+        try SimpleShell.run(cmd: "zsh \(scriptPath)")
     }
 }
 
