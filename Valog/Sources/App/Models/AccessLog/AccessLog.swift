@@ -47,15 +47,25 @@ final class AccessLog: Model {
         page = req.url.description
         request = req.description
         /// 获取日志的接口不记录返回的日志信息，否则会造成无限嵌套
-        if !page.contains("api/admin/logs") {
-            do {
-                response = try res.get().description
-            } catch {
-                response = error.localizedDescription
-            }
-        } else {
-            response = "<Object>"
+        do {
+            let resp = try res.get()
+            response = resp.description(withBody: !page.contains("api/admin/logs"))
+        } catch {
+            response = error.localizedDescription
         }
     }
 }
 
+extension Response {
+    func description(withBody: Bool) -> String {
+        var desc: [String] = []
+        desc.append("HTTP/\(self.version.major).\(self.version.minor) \(self.status.code) \(self.status.reasonPhrase)")
+        desc.append(self.headers.debugDescription)
+        if withBody {
+            desc.append(self.body.description)
+        } else {
+            desc.append("<Object>")
+        }
+        return desc.joined(separator: "\n")
+    }
+}
