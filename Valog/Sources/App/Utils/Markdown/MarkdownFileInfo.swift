@@ -88,7 +88,7 @@ struct MarkdownFile {
         sections = rootSection.children?.compactMap { $0.toPostSection() } ?? []
 
         frontMatter = try YAMLDecoder().decode(from: yamlContent)
-        contents = lines.joined(separator: "\n").trimmingCharacters(in: .whitespacesAndNewlines)
+        contents = postContent.trimmingCharacters(in: .whitespacesAndNewlines)
     }
     
     func makeModel() -> Post {
