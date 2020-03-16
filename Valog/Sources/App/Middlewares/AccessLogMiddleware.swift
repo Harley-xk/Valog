@@ -28,7 +28,7 @@ final class AccessLogMiddleware: Middleware {
         guard let address = request.remoteIP else {
             return request.eventLoop.future(nil)
         }
-        return request.client.get(.init(string: "http://ip-api.com/json/\(address)")).map({ (resp) -> GeoLocation? in
+        return request.client.get(.init(string: "http://ip-api.com/json/\(address)?lang=zh-CN")).map({ (resp) -> GeoLocation? in
             return try? resp.content.decode(GeoLocation.self)
         }).flatMapErrorThrowing { (error) -> GeoLocation? in
             return nil
