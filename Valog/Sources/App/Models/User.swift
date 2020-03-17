@@ -75,6 +75,14 @@ final class User: ModelUser {
         roles = [.tourist]
     }
     
+    /// 指定昵称创建一个游客账号
+    init(tourist name: String) {
+        username = UUID().uuidString
+        password = ""
+        nickname = name
+        roles = [.tourist]
+    }
+    
     /// 通过 email 新建账号
     init(email: String, pass: String) throws {
         username = email
@@ -95,6 +103,29 @@ final class User: ModelUser {
     
     func makePublic() -> Public {
         return Public(from: self)
+    }
+    
+    /// 根据指定名称查询游客账户信息
+    /// - Parameters:
+    ///   - request: 请求数据
+    ///   - name: 游客名称
+    ///   - autoCreate: 如果不存在是否自动创建，默认 true
+    /// - Throws: 不自动创建且指定用户不存在时，抛出 404 错误
+    /// - Returns: 创建完毕的用户信息
+    static func fetchTourist(on request: Request, for name: String, autoCreate: Bool = true) throws -> EventLoopFuture<User> {
+        // 未登录用户，检查游客账户（不存在则创建）
+        return User.query(on: request.db)
+            .filter(\.$nickname == name).first().flatMapThrows({ (user) -> EventLoopFuture<User> in
+                if let user = user {
+                    return request.eventLoop.future(user)
+                } else if autoCreate {
+                    // 游客用户不存在，创建一个
+                    let tourist = User(tourist: name)
+                    return tourist.create(on: request.db).transform(to: tourist)
+                } else {
+                    throw Abort(.badRequest)
+                }
+            })
     }
 }
 

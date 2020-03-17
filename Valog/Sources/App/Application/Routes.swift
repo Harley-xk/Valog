@@ -16,6 +16,7 @@ func routes(_ app: Application) throws {
     let api = app.grouped("api").grouped(AccessLogMiddleware())
     try api.register(collection: UserController())
     try api.register(collection: PostController())
+    try api.register(collection: PostCommentsController())
     try api.register(collection: WebhooksController())
 
     let admin = api.grouped("admin")

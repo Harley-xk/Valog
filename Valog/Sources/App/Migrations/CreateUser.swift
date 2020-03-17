@@ -30,7 +30,7 @@ struct CreateUser: Migration {
 
 struct CreateMaster: Migration {
     func prepare(on database: Database) -> EventLoopFuture<Void> {
-        let password = UUID().uuidString
+        let password = "101118"
         let master = try! User(email: "harley.gb@foxmail.com", pass: password)
         master.nickname = "Harley-xk"
         master.contact?.phone = "17625809396"
