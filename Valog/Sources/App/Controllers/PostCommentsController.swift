@@ -42,22 +42,24 @@ final class PostCommentsController: RouteCollection {
     
     func create(_ request: Request) throws -> EventLoopFuture<PostComment.Public> {
         guard let postId = request.parameters.get("id") else {
-            throw Abort(.badRequest)
+            throw Abort(.badRequest, reason: "没有指定文章")
         }
         // 确保文章存在
-        return Post.find(postId, on: request.db).unwrap(or: Abort(.notFound)).flatMapThrows { post in
-            let body = try request.content.decode(PostCommentCreatingBody.self)
-            if let user = request.auth.get(User.self) {
-                // 已登录用户，直接创建评论
-                return try self.createComment(on: request, for: postId, with: body, sender: user)
-            } else if let sender = body.sender {
-                return try User.fetchTourist(on: request, for: sender)
-                    .flatMapThrows { user in
-                        return try self.createComment(on: request, for: postId, with: body, sender: user)
+        return Post.find(postId, on: request.db)
+            .unwrap(or: Abort(.notFound, reason: "文章不存在"))
+            .flatMapThrows { post in
+                let body = try request.content.decode(PostCommentCreatingBody.self)
+                if let user = request.auth.get(User.self) {
+                    // 已登录用户，直接创建评论
+                    return try self.createComment(on: request, for: postId, with: body, sender: user)
+                } else if let sender = body.sender {
+                    return try User.fetchTourist(on: request, for: sender)
+                        .flatMapThrows { user in
+                            return try self.createComment(on: request, for: postId, with: body, sender: user)
+                    }
+                } else {
+                    throw Abort(.badRequest)
                 }
-            } else {
-                throw Abort(.badRequest)
-            }
         }
     }
     
