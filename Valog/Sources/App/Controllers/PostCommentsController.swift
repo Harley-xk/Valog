@@ -34,7 +34,7 @@ final class PostCommentsController: RouteCollection {
         return PostComment.query(on: request.db)
             .with(\.$post)
             .with(\.$sender)
-            .with(\.$replyTo)
+            .with(\.$taregtUser)
             .filter(\.$post.$id == postId)
             .sort(\.$createdAt, .descending)
             .paginate(for: request).map { (page) -> (Page<PostComment.Public>) in
