@@ -55,7 +55,7 @@ class MarkdownFileManager {
                     let file = try MarkdownFile(path: path.url)
                     files.append(file)
                 } catch {
-                    Application.shared.logger.error("Parse markdown failed: \(error)")
+                    Application.shared.logger.error("Parse markdown failed: \(error), file: \(path.string)")
                 }
             }
         }

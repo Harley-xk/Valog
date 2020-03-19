@@ -40,7 +40,7 @@ struct MarkdownFile {
         guard lines.count > 0 else {
             throw MarkdownParseError(.noContents, in: path)
         }
-        guard lines.first!.hasPrefix("---") else {
+        guard lines.first!.isYamlTag() else {
             throw MarkdownParseError(.noFrontMatter, in: path)
         }
 
@@ -54,11 +54,11 @@ struct MarkdownFile {
         var inCodeblock = false
         
         for line in lines {
-            if line.hasPrefix("---"), !inYamlContent {
+            if line.isYamlTag(), !inYamlContent, yamlContent.count <= 0 {
                 inYamlContent = true
                 continue
             }
-            if line.hasPrefix("---"), inYamlContent {
+            if line.isYamlTag(), inYamlContent {
                 inYamlContent = false
                 continue
             }
@@ -168,5 +168,9 @@ extension String {
         return list.reduce(self) { (result, s) -> String in
             return result.replacingOccurrences(of: s, with: "")
         }
+    }
+    
+    func isYamlTag() -> Bool {
+        return trimmingCharacters(in: .whitespaces) == "---"
     }
 }
