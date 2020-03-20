@@ -44,6 +44,11 @@ final class AdminController: RouteCollection {
     }
         
     func getAccessLogs(_ request: Request) throws -> EventLoopFuture<Page<AccessLog>> {
-        return AccessLog.query(on: request.db).sort(\.$createdAt, .descending).paginate(for: request)
+        let type = try request.query.get(String.self, at: "type")
+        let query = AccessLog.query(on: request.db)
+        if type == "normal" {
+            query.filter(\.$page, .contains(inverse: true, .prefix), "/api/admin")
+        }
+        return query.sort(\.$createdAt, .descending).paginate(for: request)
     }
 }

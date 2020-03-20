@@ -20,6 +20,7 @@ public func prepareMigrations(_ app: Application) throws {
     app.migrations.add(Post_Add_Sections())
     
     app.migrations.add(CreatePostComment())
+    app.migrations.add(Extra_AccessLog())
     
     try app.autoMigrate().wait()
 }

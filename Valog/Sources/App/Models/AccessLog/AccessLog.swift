@@ -28,30 +28,30 @@ final class AccessLog: Model {
     @Timestamp(key: "createdAt", on: .create)
     var createdAt: Date?
     
-    // 访问的页面
+    // 访问的页面, 只保存 api 之后的内容
     @Field(key: "page")
     var page: String
     
     // http 请求的内容
     @Field(key: "request")
-    var request: String
+    var request: RequestLog
     
     // http 请求的内容
     @Field(key: "response")
-    var response: String
+    var response: ResponseLog
     
     init() {}
     
     init(request req: Request, response res: Result<Response, Error>) {
         ip = req.remoteIP ?? "Unknown"
         page = req.url.description
-        request = req.description
+        request = RequestLog(req)
         /// 获取日志的接口不记录返回的日志信息，否则会造成无限嵌套
         do {
             let resp = try res.get()
-            response = resp.description(withBody: !page.contains("api/admin/logs"))
+            response = ResponseLog(resp, hidesBody: page.contains("api/admin/logs"))
         } catch {
-            response = error.localizedDescription
+            response = ResponseLog(error: error)
         }
     }
 }
