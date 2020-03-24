@@ -7,5 +7,8 @@
 #
 
 export PATH="$PATH:"/usr/local/bin/
-cd /Users/Harley-xk/Works/博客/nuxt-pages
-/usr/local/bin/npm run generate
+cd /root/Projects/nuxt-pages
+git stash
+git pull
+npm run build
+supervisorctl restart nuxt-pages
