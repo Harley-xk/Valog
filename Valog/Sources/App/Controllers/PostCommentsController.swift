@@ -23,7 +23,7 @@ final class PostCommentsController: RouteCollection {
     func boot(routes: RoutesBuilder) throws {
         routes.get("posts", ":id", "comments", use: index)
         
-        routes.grouped(Token.authenticator().middleware())
+        routes.grouped(Token.authenticator())
             .post("posts", ":id", "comments", use: create)
     }
     

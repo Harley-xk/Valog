@@ -2,6 +2,7 @@
 //import FluentSQLiteDriver
 import Vapor
 import FluentPostgresDriver
+//import FluentMySQLDriver
 //import Redis
 
 // Called before your application initializes.
@@ -10,8 +11,8 @@ public func configure(_ app: Application) throws {
     // initialize
     let config = try app.prepareConfigure()
     
-    app.server.configuration.hostname = config.server.host
-    app.server.configuration.port = config.server.port
+    app.http.server.configuration.hostname = config.server.host
+    app.http.server.configuration.port = config.server.port
 
 //    app.redis.configuration = RedisKit.RedisConfiguration(
 //        hostname: config.redis.host,
@@ -32,7 +33,7 @@ public func configure(_ app: Application) throws {
     // Configure MySQL database
 //    app.databases.use(.mysql(
 //        hostname: config.database.host,
-//        port: config.database.port,
+//        port: config.database.port ?? 3306,
 //        username: config.database.username,
 //        password: config.database.password,
 //        database: config.database.name,

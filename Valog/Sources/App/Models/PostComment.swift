@@ -18,7 +18,7 @@ final class PostComment: Model {
     static var schema = "PostComments"
     
     /// id，自动生成
-    @ID(key: "id")
+    @ID(custom: "id")
     var id: Int?
     
     /// 评论所属文章
@@ -106,11 +106,11 @@ extension PostComment {
     }
     
     func loadEagerAndMakePublic(on request: Request) -> EventLoopFuture<Public> {
-        return [
-            $sender.load(on: request.db),
-            $taregtUser.load(on: request.db),
-            ]
-            .flatten(on: request.eventLoop)
+        var tasks = [$sender.load(on: request.db)]
+        if  $taregtUser.id != nil {
+            tasks.append($taregtUser.load(on: request.db))
+        }
+        return tasks.flatten(on: request.eventLoop)
             .map { self.makePublic() }
     }
 }

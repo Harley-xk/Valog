@@ -27,7 +27,7 @@ class AdminGuradMiddleware: Middleware {
 final class AdminController: RouteCollection {
     
     func boot(routes: RoutesBuilder) throws {
-        let group = routes.grouped([Token.authenticator().middleware(), AdminGuradMiddleware()])
+        let group = routes.grouped([Token.authenticator(), AdminGuradMiddleware()])
         group.get("logs", "application", use: getApplicationLogs)
         group.get("logs", "accesslog", use: getAccessLogs)
     }

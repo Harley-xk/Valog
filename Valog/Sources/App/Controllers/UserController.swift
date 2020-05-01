@@ -17,7 +17,7 @@ struct LoginResponse: Content {
 final class UserController: RouteCollection {
     func boot(routes: RoutesBuilder) throws {
         
-        let passwordProtected = User.authenticator().middleware()
+        let passwordProtected = User.authenticator()
         routes.grouped(passwordProtected)
             .post("login", use: passwordLogin)
         routes.post("autoLogin", use: autoLogin)

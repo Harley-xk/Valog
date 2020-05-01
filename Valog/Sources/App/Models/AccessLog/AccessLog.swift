@@ -13,7 +13,7 @@ final class AccessLog: Model {
     
     static var schema = "AccessLog"
     
-    @ID(key: "id")
+    @ID(custom: "id")
     var id: Int?
     
     // 访问者的 ip 地址

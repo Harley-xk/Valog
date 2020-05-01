@@ -9,13 +9,13 @@ import Foundation
 import Vapor
 import Fluent
 
-final class Token: ModelUserToken {
+final class Token: ModelTokenAuthenticatable {
 
     static let schema = "Token"
     
     typealias User = App.User
     
-    @ID(key: "id")
+    @ID(custom: "id")
     var id: Int?
     
     @Parent(key: "user_id")

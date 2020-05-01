@@ -14,7 +14,7 @@ final class Post: Model {
     
     static var schema = "Posts"
     
-    @ID(key: "id")
+    @ID(custom: "id")
     var id: String?
     
     @Field(key: "title")

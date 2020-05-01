@@ -8,7 +8,7 @@
 import Fluent
 import Vapor
 
-final class User: ModelUser {
+final class User: ModelAuthenticatable {
     
     static let schema = "Users"
     
@@ -26,7 +26,7 @@ final class User: ModelUser {
         var twitter: String?
     }
     
-    @ID(key: "id")
+    @ID(custom: "id")
     var id: Int?
     
     @Field(key: "username")
@@ -42,16 +42,16 @@ final class User: ModelUser {
     var contact: Contact?
     
     @Field(key: "roles")
-    private var _roles: [String]
+    var roles: [Role]
     
-    var roles: [Role] {
-        get {
-            return _roles.compactMap { Role(rawValue: $0) }
-        }
-        set {
-            _roles = newValue.compactMap { $0.rawValue }
-        }
-    }
+//    var roles: [Role] {
+//        get {
+//            return _roles.compactMap { Role(rawValue: $0) }
+//        }
+//        set {
+//            _roles = newValue.compactMap { $0.rawValue }
+//        }
+//    }
         
     @Timestamp(key: "created_at", on: .create)
     var createdAt: Date?
