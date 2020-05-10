@@ -17,6 +17,10 @@ extension Application {
         return runningApplication
     }
     
+    static var isRunning: Bool {
+        return runningApplication != nil
+    }
+    
     func prepareConfigure() throws -> Config {
         
         #if Xcode
@@ -46,17 +50,6 @@ extension Application {
     
     var config: Config {
         return _config
-    }
-}
-
-extension DirectoryConfiguration {
-    
-    public var storageDirectory: String {
-        return workingDirectory + "Storage/"
-    }
-    
-    public var dataDirectory: String {
-        return storageDirectory + "Data/"
     }
 }
 

@@ -2,7 +2,7 @@ import App
 import Vapor
 
 var env = try Environment.detect()
-try LoggingSystem.bootstrapColoredLogger(from: &env)
+try LoggingSystem.bootstrapDailyLogger(from: &env)
 let app = Application(env)
 defer { app.shutdown() }
 try configure(app)

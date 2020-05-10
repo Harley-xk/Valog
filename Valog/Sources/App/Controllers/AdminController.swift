@@ -5,14 +5,18 @@
 //  Created by Harley-xk on 2020/3/1.
 //
 
+import Fluent
 import Foundation
 import Vapor
-import Fluent
 
 struct LogContent: Content {
-    
     var content: String
     var time: String = Date().string()
+}
+
+struct StandardLogQuery: Content {
+    var from: Date
+    var to: Date?
 }
 
 class AdminGuradMiddleware: Middleware {
@@ -25,11 +29,12 @@ class AdminGuradMiddleware: Middleware {
 }
 
 final class AdminController: RouteCollection {
-    
     func boot(routes: RoutesBuilder) throws {
         let group = routes.grouped([Token.authenticator(), AdminGuradMiddleware()])
         group.get("logs", "application", use: getApplicationLogs)
         group.get("logs", "accesslog", use: getAccessLogs)
+        group.get("logs", "standard", use: getStandardLogs)
+        group.get("logs", "standard", ":year", ":date", use: getStandardLogsByDate)
     }
     
     func getApplicationLogs(_ request: Request) throws -> LogContent {
@@ -42,7 +47,7 @@ final class AdminController: RouteCollection {
         request.logger.info("Read log file from: \(path.string), used encoding: \(encoding.description)")
         return LogContent(content: content)
     }
-        
+    
     func getAccessLogs(_ request: Request) throws -> EventLoopFuture<Page<AccessLog>> {
         let type = try request.query.get(String.self, at: "type")
         let query = AccessLog.query(on: request.db)
@@ -50,5 +55,40 @@ final class AdminController: RouteCollection {
             query.filter(\.$page, .contains(inverse: true, .prefix), "/api/admin")
         }
         return query.sort(\.$createdAt, .descending).paginate(for: request)
+    }
+    
+    func getStandardLogsByDate(_ request: Request) throws -> String {
+        guard let year = request.parameters.get("year"),
+            let date = request.parameters.get("date") else {
+            throw Abort(.badRequest)
+        }
+        return try readLogsBy(year: year, date: date)
+    }
+    
+    func getStandardLogs(_ request: Request) throws -> String {
+        var result = ""
+        
+        let query = try request.content.decode(StandardLogQuery.self)
+        var date = query.from.withoutTime
+        let end = (query.to ?? Date()).withoutTime
+        while date <= end {
+            try result.append(
+                contentsOf: readLogsBy(
+                    year: date.string(format: "yyyy"),
+                    date: date.string(format: "MM-dd")
+                )
+            )
+            date = date + .day(1)
+        }
+        return result
+    }
+    
+    private func readLogsBy(year: String, date: String) throws -> String {
+        let path = Application.shared.directory.logsDirectory + "Standard/\(year)/\(date).log"
+        guard FileManager.default.fileExists(atPath: path) else {
+            return ""
+        }
+        let content = try String(contentsOfFile: path)
+        return content
     }
 }
