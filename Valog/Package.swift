@@ -23,7 +23,7 @@ let package = Package(
         // Yams, Yaml 解析器
         .package(url: "https://github.com/jpsim/Yams.git", from: "2.0.0"),
         // SMTP Service from IBM
-        .package(url: "https://github.com/IBM-Swift/Swift-SMTP", .upToNextMinor(from: "5.1.0")),
+        .package(url: "https://github.com/Harley-xk/Swift-SMTP", .upToNextMinor(from: "5.1.0")),
     ],
     targets: [
         .target(name: "App",
