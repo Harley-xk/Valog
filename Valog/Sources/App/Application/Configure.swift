@@ -98,9 +98,18 @@ struct Config: Codable {
         var token: String
     }
     
+    /// SMTP 发件箱配置
+    struct SMTP: Codable {
+        var host: String
+        var senderName: String
+        var senderAccount: String
+        var password: String
+    }
+    
     var server: Server
     var database: Database
     var redis: Redis
     var webSite: WebSite
     var hook: Webhook
+    var smtp: SMTP
 }

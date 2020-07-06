@@ -19,5 +19,11 @@
   },
   "hook": {
       "token": "abcdefg"
+  },
+  "smtp": {
+      "host": "smtp.qq.com",
+      "senderName": "Harley-xk",
+      "senderAccount": "harley.gb@foxmail.com",
+      "password": "abcdefg"
   }
 }
