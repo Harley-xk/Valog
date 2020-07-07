@@ -106,10 +106,17 @@ struct Config: Codable {
         var password: String
     }
     
+    /// Github App 配置
+    struct GithubApp: Codable {
+        var client_id: String
+        var client_secret: String
+    }
+    
     var server: Server
     var database: Database
     var redis: Redis
     var webSite: WebSite
     var hook: Webhook
     var smtp: SMTP
+    var github: GithubApp?
 }

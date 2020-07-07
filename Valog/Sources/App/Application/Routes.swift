@@ -18,7 +18,8 @@ func routes(_ app: Application) throws {
     try api.register(collection: PostController())
     try api.register(collection: PostCommentsController())
     try api.register(collection: WebhooksController())
-
+    try api.register(collection: GithubController())
+    
     let admin = api.grouped("admin")
     try admin.register(collection: AdminController())
     

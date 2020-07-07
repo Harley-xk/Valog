@@ -25,5 +25,9 @@
       "senderName": "Harley-xk",
       "senderAccount": "harley.gb@foxmail.com",
       "password": "abcdefg"
+  },
+  "github": {
+      "client_id": "abcdefg",
+      "client_secret": "abcdefg"
   }
 }
