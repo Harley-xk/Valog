@@ -109,7 +109,7 @@ final class PostCommentsController: RouteCollection {
         var mail = Mail(from: owner, to: [owner])
         var content = ""
         if let replyTo = replyTo {
-            mail.subject = "[Harley-xk.studio]\(sender.nickname)回复了评论"
+            mail.subject = "[Harley-xk.studio] \(sender.nickname) 回复了评论"
             content = "<p>\(sender.nickname)在文章<a href=\"https://me.harley-xk.studio/posts/\(post.id!)\">《\(post.title)》</a>回复了 \(replyTo.sender.nickname)：\(comment.content)</p>"
             if let email = replyTo.sender.contact?.email {
                 let replyToUser = Mail.User(name: replyTo.sender.nickname, email: email)
@@ -117,7 +117,7 @@ final class PostCommentsController: RouteCollection {
                 mail.cc = [owner]
             }
         } else {
-            mail.subject = "[Harley-xk.studio]\(sender.nickname)发表了评论"
+            mail.subject = "[Harley-xk.studio] \(sender.nickname) 发表了评论"
             content = "<p>\(sender.nickname)在文章<a href=\"https://me.harley-xk.studio/posts/\(post.id!)\">《\(post.title)》</a>发表了评论：\(comment.content)</p>"
         }
         mail.alternative = Attachment(htmlContent: content)
