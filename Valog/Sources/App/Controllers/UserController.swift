@@ -22,6 +22,7 @@ final class UserController: RouteCollection {
             .post("login", use: passwordLogin)
         routes.post("autoLogin", use: autoLogin)
         routes.post("signout", use: signOut)
+        routes.post("githubLogin", use: githubLogin)
     }
     
     func passwordLogin(_ request: Request) throws -> EventLoopFuture<LoginResponse> {
@@ -56,5 +57,34 @@ final class UserController: RouteCollection {
             }
             return t.delete(on: request.db).transform(to: .noContent)
         }
+    }
+    
+    // MARK: - Github
+    func githubLogin(_ request: Request) throws -> EventLoopFuture<LoginResponse> {
+        let githubController = GithubController()
+        return try githubController.checkCode(request)
+            .flatMapThrows { (u) -> EventLoopFuture<User> in
+                // 查询用户是否存在
+                GithubUser.query(on: request.db).with(\.$user).filter(\.$login == u.login)
+                    .first().flatMapThrows { (gUser) -> EventLoopFuture<User> in
+                        guard let gUser = gUser else {
+                            // 用户不存在，创建
+                            return try self.createUser(with: u, on: request.db)
+                        }
+                        return request.eventLoop.future(gUser.user)
+                    }
+            }.flatMapThrows({ (user) -> EventLoopFuture<LoginResponse> in
+                let token = try user.generateToken()
+                return token.save(on: request.db).map {
+                    return LoginResponse(user: user.makePublic(), token: token.makePublic())
+                }
+            })
+    }
+    
+    func createUser(with github: GithubUser.Response, on database: Database) throws -> EventLoopFuture<User> {
+        let user = User(github: github)
+        return user.save(on: database).flatMapThrows({ () -> EventLoopFuture<Void> in
+            return GithubUser(from: github, user_id: user.id!).save(on: database)
+        }).transform(to: user)
     }
 }

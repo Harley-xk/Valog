@@ -43,16 +43,7 @@ final class User: ModelAuthenticatable {
     
     @Field(key: "roles")
     var roles: [Role]
-    
-//    var roles: [Role] {
-//        get {
-//            return _roles.compactMap { Role(rawValue: $0) }
-//        }
-//        set {
-//            _roles = newValue.compactMap { $0.rawValue }
-//        }
-//    }
-        
+
     @Timestamp(key: "created_at", on: .create)
     var createdAt: Date?
 
@@ -89,6 +80,15 @@ final class User: ModelAuthenticatable {
         nickname = email.components(separatedBy: "@").first ?? email
         contact = Contact(email: email)
         password = try Bcrypt.hash(pass)
+        roles = [.normal]
+    }
+    
+    /// 通过 github 新建账号
+    init(github: GithubUser.Response) {
+        username = UUID().uuidString
+        nickname = github.name
+        contact = Contact(email: github.email)
+        password = ""
         roles = [.normal]
     }
     
