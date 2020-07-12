@@ -7,17 +7,17 @@
 
 import Foundation
 import Vapor
-import AsyncHTTPClient
+import Alamofire
 
 class GithubController {
     
-    func checkCode(_ request: Request) throws -> EventLoopFuture<GithubUser.Response> {
+    func checkCode(_ request: Vapor.Request) throws -> EventLoopFuture<GithubUser.Response> {
         return try getAccessToken(by: request).flatMapThrows { (resp) -> EventLoopFuture<GithubUser.Response> in
             return try self.getGithubUser(request, with: resp)
         }
     }
-    
-    private func getAccessToken(by codeRequest: Request) throws -> EventLoopFuture<AccessTokenResponse> {
+        
+    private func getAccessToken(by codeRequest: Vapor.Request) throws -> EventLoopFuture<AccessTokenResponse> {
         let content = try codeRequest.content.decode(CheckCodeRequest.self)
         let reqContent = AccessTokenRequest(
             client_id: codeRequest.application.config.github?.client_id ?? "",
@@ -25,20 +25,23 @@ class GithubController {
             code: content.code,
             state: content.state
         )
-        return codeRequest.client.post(
+
+        return Alamofire.Session.default.request(
             "https://github.com/login/oauth/access_token",
+            method: .post,
+            parameters: reqContent,
+            encoder: JSONParameterEncoder(),
             headers: [
                 "Accept":"application/json",
                 "User-Agent": "Valog HttpClient, powered by Vapor"
             ]
-        ) { (request) in
-            try request.content.encode(reqContent, as: .json)
-        }.mapThrows { (resp) -> (AccessTokenResponse) in
-            return try self.decodeResponse(resp, errorType: OAuthErrorResponse.self)
+        ).futureDataResponse(on: codeRequest.eventLoop).mapThrows { (data) -> AccessTokenResponse in
+            let model = try JSONDecoder().decode(AccessTokenResponse.self, from: data)
+            return model
         }
     }
     
-    private func getGithubUser(_ request: Request, with token: AccessTokenResponse) throws -> EventLoopFuture<GithubUser.Response> {
+    private func getGithubUser(_ request: Vapor.Request, with token: AccessTokenResponse) throws -> EventLoopFuture<GithubUser.Response> {
         return request.client.get(
             "https://api.github.com/user",
             headers: [
