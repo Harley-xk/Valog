@@ -24,8 +24,6 @@ let package = Package(
         .package(url: "https://github.com/jpsim/Yams.git", from: "2.0.0"),
         // SMTP Service from IBM
         .package(url: "https://github.com/Harley-xk/Swift-SMTP", .upToNextMinor(from: "5.1.0")),
-        // 自带的 HttpClient 不好用，上神器
-        .package(url: "https://github.com/Alamofire/Alamofire.git", .upToNextMajor(from: "5.2.0"))
     ],
     targets: [
         .target(name: "App",
@@ -38,7 +36,6 @@ let package = Package(
                     "Vapor",
                     "Yams",
                     "SwiftSMTP",
-                    "Alamofire"
             ]
         ),
         .target(name: "Valog", dependencies: ["App"]),
