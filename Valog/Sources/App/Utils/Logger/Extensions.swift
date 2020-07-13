@@ -15,7 +15,11 @@ public extension Data {
             defer {
                 try? handle.close()
             }
-            try handle.seekToEnd()
+            if #available(OSX 10.15.4, *) {
+                try handle.seekToEnd()
+            } else {
+                // Fallback on earlier versions
+            }
             handle.write(self)
         } else if autoCreate {
             try self.write(to: file)

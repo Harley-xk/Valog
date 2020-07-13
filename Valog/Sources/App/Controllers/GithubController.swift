@@ -7,17 +7,17 @@
 
 import Foundation
 import Vapor
-import AsyncHTTPClient
+import Alamofire
 
 class GithubController {
     
-    func checkCode(_ request: Request) throws -> EventLoopFuture<GithubUser.Response> {
+    func checkCode(_ request: Vapor.Request) throws -> EventLoopFuture<GithubUser.Response> {
         return try getAccessToken(by: request).flatMapThrows { (resp) -> EventLoopFuture<GithubUser.Response> in
             return try self.getGithubUser(request, with: resp)
         }
     }
     
-    private func getAccessToken(by codeRequest: Request) throws -> EventLoopFuture<AccessTokenResponse> {
+    private func getAccessToken(by codeRequest: Vapor.Request) throws -> EventLoopFuture<AccessTokenResponse> {
         let content = try codeRequest.content.decode(CheckCodeRequest.self)
         let reqContent = AccessTokenRequest(
             client_id: codeRequest.application.config.github?.client_id ?? "",
@@ -25,31 +25,32 @@ class GithubController {
             code: content.code,
             state: content.state
         )
-        return codeRequest.client.post(
+        
+        return Alamofire.Session.default.request(
             "https://github.com/login/oauth/access_token",
+            method: .post,
+            parameters: reqContent,
+            encoder: JSONParameterEncoder(),
             headers: [
                 "Accept":"application/json",
-                "User-Agent": "Valog HttpClient, powered by Vapor"
             ]
-        ) { (request) in
-            try request.content.encode(reqContent, as: .json)
-        }.mapThrows { (resp) -> (AccessTokenResponse) in
-            return try self.decodeResponse(resp, errorType: OAuthErrorResponse.self)
+        ).futureDataResponse(on: codeRequest.eventLoop).mapThrows { (data) -> AccessTokenResponse in
+            return try self.decodeResponse(from: data, errorType: OAuthErrorResponse.self)
         }
     }
     
-    private func getGithubUser(_ request: Request, with token: AccessTokenResponse) throws -> EventLoopFuture<GithubUser.Response> {
-        return request.client.get(
+    private func getGithubUser(_ request: Vapor.Request, with token: AccessTokenResponse) throws -> EventLoopFuture<GithubUser.Response> {
+        return Alamofire.Session.default.request(
             "https://api.github.com/user",
+            method: .post,
             headers: [
-                    "Accept": "application/vnd.github.v3+json",
-                    "Authorization": "token \(token.access_token)",
-                    "User-Agent": "Valog HttpClient, powered by Vapor"
-            ]).mapThrows { (resp) -> GithubUser.Response in
-                return try self.decodeApiResponse(resp)
-            }
+                "Accept": "application/vnd.github.v3+json",
+                "Authorization": "token \(token.access_token)",
+            ]
+        ).futureDataResponse(on: request.eventLoop).mapThrows { (data) -> GithubUser.Response in
+            return try self.decodeApiResponse(from: data)
+        }
     }
-
 }
 
 extension GithubController {
@@ -68,7 +69,7 @@ extension GithubController {
         
         /// Required. The code you received as a response to Step 1.
         var code: String
-                
+        
         /// The unguessable random string you provided in Step 1.
         var state: String
     }
@@ -89,17 +90,21 @@ extension GithubController {
         var documentation_url: String?
     }
     
-    private func decodeApiResponse<T: Content>(_ response: ClientResponse) throws -> T {
-        return try decodeResponse(response, errorType: ApiErrorResponse.self)
+    private func decodeApiResponse<T: Content>(from data: Data) throws -> T {
+        return try decodeResponse(from: data, errorType: ApiErrorResponse.self)
     }
-
+    
     private func decodeResponse<T: Content, E: Content & Error>(
-        _ response: ClientResponse, errorType: E.Type
+        from data: Data, errorType: E.Type
     ) throws -> T {
-        Application.shared.logger.info("[Github Response] \(response.description)")
-        if let model = try? response.content.decode(T.self) {
+        var logContent = "[Github Response] "
+        defer {
+            Application.shared.logger.info("\(logContent)")
+        }
+        if let model = try? JSONDecoder().decode(T.self, from: data) {
+            logContent += String(describing: model)
             return model
-        } else if let error = try? response.content.decode(E.self) {
+        } else if let error = try? JSONDecoder().decode(E.self, from: data) {
             throw Abort(.badRequest, reason: error.localizedDescription)
         } else {
             throw Abort(.badRequest, reason: "未知错误")
