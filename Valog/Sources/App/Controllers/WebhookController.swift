@@ -19,12 +19,13 @@ class WebhooksController: RouteCollection {
         
         /// 验证签名
 //        try verifySignature(from: request)
-
         let action = try request.content.decode(PushAction.self)
-        
+        // 只有主分支的变化才会触发自动部署
+        guard action.ref == "refs/heads/master" else {
+            return request.eventLoop.future(.notModified)
+        }
         // 校验是否是合法的钩子
         if action.repository.full_name == "Harley-xk/Posts" {
-//            action.ref == "refs/heads/master",
 //            action.sender.name == "Harley-xk" {
             return try updatePostsAndReload(from: request).transform(to: HTTPStatus.ok)
         } else if action.repository.full_name == "Harley-xk/nuxt-pages" {
@@ -35,7 +36,7 @@ class WebhooksController: RouteCollection {
             return request.eventLoop.future(.ok)
         } else {
             // 抛出 404 错误，假装没有这个接口
-            throw Abort(.badRequest, reason: "Unsupported action!")
+            throw Abort(.badRequest)
         }
     }
     
