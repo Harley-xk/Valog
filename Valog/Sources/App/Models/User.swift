@@ -24,6 +24,7 @@ final class User: ModelAuthenticatable {
         var phone: String?
         var wechat: String?
         var twitter: String?
+        var github: String?
     }
     
     @ID(custom: "id")
@@ -37,6 +38,9 @@ final class User: ModelAuthenticatable {
 
     @Field(key: "nickname")
     var nickname: String
+    
+    @Field(key: "avatar")
+    var avatar: String?
     
     @Field(key: "contact")
     var contact: Contact?
@@ -87,7 +91,8 @@ final class User: ModelAuthenticatable {
     init(github: GithubUser.Response) {
         username = UUID().uuidString
         nickname = github.name
-        contact = Contact(email: github.email)
+        contact = Contact(email: github.email, github: github.login)
+        avatar = github.avatar_url
         password = ""
         roles = [.normal]
     }
@@ -144,10 +149,13 @@ extension User: ResponseEncodable {
     
     struct Public: Content {
         var nickname: String
+        var avatar: String?
         var roles: [Role]
+        var contact: Contact?
         
         init(from model: User) {
             nickname = model.nickname
+            avatar = model.avatar
             roles = model.roles
         }
     }

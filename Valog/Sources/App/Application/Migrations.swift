@@ -22,6 +22,7 @@ public func prepareMigrations(_ app: Application) throws {
     app.migrations.add(CreatePostComment())
     app.migrations.add(Extra_AccessLog())
     app.migrations.add(CreateGithubUser())
+    app.migrations.add(User_Add_Avatar_Migration())
     
     try app.autoMigrate().wait()
 }

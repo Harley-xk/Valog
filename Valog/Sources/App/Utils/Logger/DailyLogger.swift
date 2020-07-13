@@ -89,7 +89,7 @@ public class DailyLogger: LogHandler {
                 print(text.terminalStylize(), to: &dailyFile.file)
             }
             if self.logLevel == .debug || self.logLevel == .trace {
-                print(text.description)
+//                print(text.description)
             }
         } catch {
             print("Write Daily Logs Failed: \(error.localizedDescription)")

@@ -42,7 +42,7 @@ class GithubController {
     private func getGithubUser(_ request: Vapor.Request, with token: AccessTokenResponse) throws -> EventLoopFuture<GithubUser.Response> {
         return Alamofire.Session.default.request(
             "https://api.github.com/user",
-            method: .post,
+            method: .get,
             headers: [
                 "Accept": "application/vnd.github.v3+json",
                 "Authorization": "token \(token.access_token)",
@@ -100,6 +100,13 @@ extension GithubController {
         var logContent = "[Github Response] "
         defer {
             Application.shared.logger.info("\(logContent)")
+            #if DEBUG
+            let dict = try! JSONSerialization.jsonObject(with: data)
+            let formatted = try! JSONSerialization.data(withJSONObject: dict, options: .prettyPrinted)
+            let content = String(data: formatted, encoding: .utf8)
+            logContent += "\n\(content ?? "<null>")"
+            print(logContent)
+            #endif
         }
         if let model = try? JSONDecoder().decode(T.self, from: data) {
             logContent += String(describing: model)

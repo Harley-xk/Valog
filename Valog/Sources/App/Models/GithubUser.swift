@@ -40,7 +40,7 @@ final class GithubUser: Model {
         var login: String
         var name: String
         var email: String
-        var avatar_url: String
+        var avatar_url: String?
         var url: String
     }
     
