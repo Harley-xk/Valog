@@ -98,12 +98,15 @@ extension GithubController {
     ) throws -> T {
         
         Application.shared.logger.info("[Github Response] \(response.description)")
-        if let model = try? response.content.decode(T.self) {
-            return model
-        } else if let error = try? response.content.decode(E.self) {
+        
+        if let error = try? response.content.decode(E.self) {
             throw Abort(.badRequest, reason: error.localizedDescription)
-        } else {
-            throw Abort(.badRequest, reason: "未知错误")
+        }
+        do {
+            let model = try response.content.decode(T.self)
+            return model
+        } catch {
+            throw Abort(.badRequest, reason: error.localizedDescription)
         }
     }
 }

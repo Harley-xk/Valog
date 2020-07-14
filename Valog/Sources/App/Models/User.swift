@@ -90,7 +90,7 @@ final class User: ModelAuthenticatable {
     /// 通过 github 新建账号
     init(github: GithubUser.Response) {
         username = UUID().uuidString
-        nickname = github.name
+        nickname = github.name ?? github.login
         contact = Contact(email: github.email, github: github.login)
         avatar = github.avatar_url
         password = ""

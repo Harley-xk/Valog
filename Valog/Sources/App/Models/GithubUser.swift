@@ -27,7 +27,7 @@ final class GithubUser: Model {
     var name: String
 
     @Field(key: "email")
-    var email: String
+    var email: String?
 
     @Field(key: "avatar_url")
     var avatar_url: String?
@@ -38,8 +38,8 @@ final class GithubUser: Model {
     // 暂时只需要以下字段
     struct Response: Content {
         var login: String
-        var name: String
-        var email: String
+        var name: String?
+        var email: String?
         var avatar_url: String?
         var url: String
     }
@@ -49,7 +49,7 @@ final class GithubUser: Model {
     init(from response: Response, user_id: Int) {
         $user.id = user_id
         login = response.login
-        name = response.name
+        name = response.name ?? response.login
         email = response.email
         avatar_url = response.avatar_url
         url = response.url

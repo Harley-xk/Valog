@@ -16,7 +16,7 @@ final class CreateGithubUser: Migration {
             .field("user_id", .int, .required)
             .field("login", .string, .required)
             .field("name", .string, .required)
-            .field("email", .string, .required)
+            .field("email", .string)
             .field("avatar_url", .string)
             .field("url", .string)
             .create()
