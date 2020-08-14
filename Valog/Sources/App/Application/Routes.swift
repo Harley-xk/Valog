@@ -31,3 +31,30 @@ func routes(_ app: Application) throws {
 //    app.post("todos", use: todoController.create)
 //    app.on(.DELETE, "todos", ":todoID", use: todoController.delete)
 }
+
+
+extension Route {
+    
+    // 给 route 设置标签，方便后面识别
+    enum Tag {
+        static let key = "route.tag.key"
+        case none
+        case read_post
+    }
+    
+    var tag: Tag {
+        get {
+            if let tag = userInfo[Tag.key] as? Tag {
+                return tag
+            }
+            return .none
+        }
+        set {
+            userInfo[Tag.key] = newValue
+        }
+    }
+    
+    func setTag(_ value: Tag) {
+        tag = value
+    }
+}

@@ -20,7 +20,21 @@ final class AccessLogMiddleware: Middleware {
         let log = AccessLog(request: request, response: result)
         _ = queryGeoLocation(for: request).flatMap { (location) -> EventLoopFuture<Void> in
             log.geoLocation = location
-            return log.save(on: request.db)
+            return log.save(on: request.db).flatMap {
+                guard request.route?.tag == .read_post,
+                      let post_id = request.parameters.get("id"),
+                      let log_id = try? log.requireID()
+                else {
+                    return request.eventLoop.future()
+                }
+                let record = PostReadRecord.make(
+                    postId: post_id,
+                    logId: log_id,
+                    userId: nil
+                )
+                // 记录文章阅读日志
+                return record.save(on: request.db)
+            }
         }
     }
     

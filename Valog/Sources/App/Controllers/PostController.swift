@@ -15,6 +15,7 @@ final class PostController: RouteCollection {
     func boot(routes: RoutesBuilder) throws {
         routes.get("posts", use: getPosts)
         routes.get("posts", ":id", use: postDetail)
+            .setTag(.read_post) // 路由标志，方便后面识别
     }
     
     func getPosts(_ request: Request) throws -> EventLoopFuture<Page<Post.Public>> {
