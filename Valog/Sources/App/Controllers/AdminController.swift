@@ -19,6 +19,12 @@ struct StandardLogQuery: Content {
     var to: Date?
 }
 
+struct PostReadRecordQuery: Content {
+    var from: Date?
+    var to: Date?
+    var post_id: String?
+}
+
 class AdminGuradMiddleware: Middleware {
     func respond(to request: Request, chainingTo next: Responder) -> EventLoopFuture<Response> {
         guard let user = try? request.auth.require(User.self), user.roles.contains(.admin) else {
@@ -90,5 +96,24 @@ final class AdminController: RouteCollection {
         }
         let content = try String(contentsOfFile: path)
         return content
+    }
+    
+    // MARK - Post Read Records
+    
+    func queryPostReadRecords(_ request: Request) throws -> EventLoopFuture<Page<PostReadRecord>> {
+        var params = try request.query.decode(PostReadRecordQuery.self)
+        let from = params.from ?? Date().beginTime
+        let to = params.to ?? Date().endTime
+        guard from < to else {
+            throw Abort(.badRequest, reason: "开始时间必须小于结束时间")
+        }
+        var query = PostReadRecord.query(on: request.db)
+            .filter(\.createdAt <= to)
+            .filter(\.createdAt >= from)
+            .with(\.$post)
+            .with(\.$reader).first()
+        
+        return query
+        
     }
 }
