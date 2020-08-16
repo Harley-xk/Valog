@@ -41,6 +41,7 @@ final class AdminController: RouteCollection {
         group.get("logs", "accesslog", use: getAccessLogs)
         group.get("logs", "standard", use: getStandardLogs)
         group.get("logs", "standard", ":year", ":date", use: getStandardLogsByDate)
+        group.get("records", "posts", "read", use: queryPostReadRecords)
     }
     
     func getApplicationLogs(_ request: Request) throws -> LogContent {
@@ -101,19 +102,21 @@ final class AdminController: RouteCollection {
     // MARK - Post Read Records
     
     func queryPostReadRecords(_ request: Request) throws -> EventLoopFuture<Page<PostReadRecord>> {
-        var params = try request.query.decode(PostReadRecordQuery.self)
-        let from = params.from ?? Date().beginTime
+        let params = try request.query.decode(PostReadRecordQuery.self)
+        let from = params.from ?? Date.init(timeIntervalSince1970: 0)
         let to = params.to ?? Date().endTime
         guard from < to else {
             throw Abort(.badRequest, reason: "开始时间必须小于结束时间")
         }
-        var query = PostReadRecord.query(on: request.db)
-            .filter(\.createdAt <= to)
-            .filter(\.createdAt >= from)
-            .with(\.$post)
-            .with(\.$reader).first()
+        let query = PostReadRecord.query(on: request.db)
+            .filter(\.$createdAt <= to)
+            .filter(\.$createdAt >= from)
+        if let post_id = params.post_id {
+            query.filter(\.$post.$id == post_id)
+        }
         
-        return query
-        
+        query.sort(\.$createdAt, .descending)
+            .with(\.$accessLog).with(\.$post).with(\.$reader)
+        return query.paginate(for: request)
     }
 }
