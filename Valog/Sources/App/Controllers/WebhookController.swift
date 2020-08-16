@@ -68,7 +68,7 @@ class WebhooksController: RouteCollection {
     private func updateNuxtSitesAndDepoly(from request: Request) throws {
         let filename = "update-website-\(request.application.environment.name).sh"
         let scriptPath: String = request.application.directory.workingDirectory + filename
-        request.logger.info("Running script: \(scriptPath)")
+        request.logger.warning("Running script: \(scriptPath)")
         try SimpleShell.run(cmd: "zsh \(scriptPath)") { _ in
             /// 网站生成完毕后尝试重新拷贝公共资源到网站根目录
             let path = Path(request.application.directory.storageDirectory + "Posts")
@@ -82,7 +82,7 @@ class WebhooksController: RouteCollection {
     
     private func rebuildServerAndDepoly(from request: Request) throws {
         let scriptPath: String = request.application.directory.workingDirectory + "redepoly.sh"
-        request.logger.info("Running script: \(scriptPath)")
+        request.logger.warning("Running script: \(scriptPath)")
         try SimpleShell.run(cmd: "zsh \(scriptPath)")
     }
 }
